@@ -122,6 +122,11 @@ Directory structure:
     dvc exp show
   ```
   ![alt text](images/dvc_run_exps.png)
+- Другой вариант
+    ```
+    dvc metrics diff
+    ```
+  ![alt text](images/dvc_metrics_diff.png)
 
 ## 3. Воспроизводимость
 - Версии уже зафиксированы

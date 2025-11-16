@@ -30,15 +30,15 @@ stages:
       size: 1477
     params:
       params.yaml:
-        train.epochs: 15
-        train.lr: 0.01
+        train.epochs: 100
+        train.lr: 0.05
         train.test_size: 0.2
     outs:
     - path: metrics/metrics.json
       hash: md5
-      md5: 9ffec21be02d914eb6f138463200801a
-      size: 31
+      md5: 1515a334c737881360cfedb627e03d74
+      size: 33
     - path: models/model.pkl
       hash: md5
-      md5: edcc2c3f17502886978c92b4b20932a5
+      md5: e3030701045f647091a8e636cff112bb
       size: 801
