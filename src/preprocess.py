@@ -1,4 +1,5 @@
 import random
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -10,7 +11,7 @@ random.seed(SEED)
 
 
 def preprocess(
-    input_path="data/raw/dataset.csv", output_path="data/preprocessed/preprocessed.csv"
+    input_path="data/raw/dataset.csv", output_path="data/processed/processed.csv"
 ):
     df = pd.read_csv(input_path)
 
@@ -21,6 +22,10 @@ def preprocess(
     le = LabelEncoder()
     df["Sex"] = le.fit_transform(df["Sex"])
     df["Embarked"] = le.fit_transform(df["Embarked"])
+
+    # Создаем папку, если ее нет
+    output_dir = Path(output_path).parent
+    output_dir.mkdir(parents=True, exist_ok=True)
 
     df.to_csv(output_path, index=False)
     print(f"Preprocessed data saved to {output_path}")

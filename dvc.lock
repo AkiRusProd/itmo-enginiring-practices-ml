@@ -5,40 +5,96 @@ stages:
     deps:
     - path: data/raw/dataset.csv
       hash: md5
-      md5: 4352d21a0a13621f519ec29abaa9369e
-      size: 5063
+      md5: 61fdd54abdbf6a85b778e937122e1194
+      size: 60302
     - path: src/preprocess.py
       hash: md5
-      md5: 6bc4b8ee9e3998dccb324f9b4cdb7471
-      size: 344
+      md5: 98d2016c3f06e5cf85891f77affd16a2
+      size: 872
     outs:
     - path: data/processed
       hash: md5
-      md5: 87f7b3a657ad2592c40bec4bccdb6e80.dir
-      size: 1690
+      md5: f2b45043d0dc3d59ff3ac33e1abe4f70.dir
+      size: 59411
       nfiles: 1
   train_model:
     cmd: python src/modeling/train.py
     deps:
     - path: data/processed/processed.csv
       hash: md5
-      md5: 0d57f4e160f7f22a8ef8e83abb6576dc
-      size: 1690
+      md5: 3faebfde8e1f49ca1a127d6908e25c3a
+      size: 59411
     - path: src/modeling/train.py
       hash: md5
-      md5: 368ab852362c9ff568c75027d1417b13
-      size: 1002
+      md5: e448ef0b019286166c37cbb9c9a51ef2
+      size: 4465
     params:
       params.yaml:
         train.epochs: 15
         train.lr: 0.01
         train.test_size: 0.2
     outs:
-    - path: metrics.json
+    - path: metrics/metrics.json
       hash: md5
-      md5: d937b984d4b97e7f2961b346f72fdb4a
-      size: 35
-    - path: models/model.pkl
+      md5: 8e93e1786b6360dbacb39a1749c41739
+      size: 662
+    - path: models/AdaBoost.pkl
       hash: md5
-      md5: c775f1c99769793ab47ae6762c5101aa
-      size: 531
+      md5: 96b0f31dd98f6a7fc09c525254689991
+      size: 56790
+    - path: models/Bagging.pkl
+      hash: md5
+      md5: 78ff23f547b2eb62082b553e74823a73
+      size: 1843520
+    - path: models/BernoulliNB.pkl
+      hash: md5
+      md5: 5f7283d9d19c6e9c9f55d81eeab1df38
+      size: 974
+    - path: models/DecisionTree.pkl
+      hash: md5
+      md5: f41200c2ba7505434433650aa217c4f9
+      size: 29526
+    - path: models/ExtraTrees.pkl
+      hash: md5
+      md5: 65e43595188e0f94f4f7ab5f25c39549
+      size: 5365165
+    - path: models/GaussianNB.pkl
+      hash: md5
+      md5: 1fb9b43949bcb97ddd50c0b70efa53e9
+      size: 944
+    - path: models/GradientBoosting.pkl
+      hash: md5
+      md5: dbfaefc1601dd801f76c94a70255658a
+      size: 130910
+    - path: models/KNeighbors.pkl
+      hash: md5
+      md5: e89acf69fb9e04807a595fa6ca4d486c
+      size: 57022
+    - path: models/LinearSVC.pkl
+      hash: md5
+      md5: dfa6ba11b22d171a7b805c5d26277c5d
+      size: 798
+    - path: models/LogisticRegression.pkl
+      hash: md5
+      md5: 0c1ce536f12bceaf4bc182587d00425d
+      size: 913
+    - path: models/MultinomialNB.pkl
+      hash: md5
+      md5: bd4c11d6a2228e6ed6fa887d280ee627
+      size: 956
+    - path: models/RandomForest.pkl
+      hash: md5
+      md5: f459985bcb2c642fd67ebb2071330db4
+      size: 2440796
+    - path: models/RidgeClassifier.pkl
+      hash: md5
+      md5: feca6146bbb0e57089ef2fbff75738f4
+      size: 928
+    - path: models/SVC_linear.pkl
+      hash: md5
+      md5: fb6171307ddc46cc5ca45ef850741715
+      size: 25486
+    - path: models/SVC_rbf.pkl
+      hash: md5
+      md5: aeb5f8c39a3705ec96a13e8ce574ade9
+      size: 38403

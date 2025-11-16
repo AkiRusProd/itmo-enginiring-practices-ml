@@ -16,7 +16,22 @@ stages:
     - train.lr
     - train.test_size
     outs:
-    - models/model.pkl
+      - models/LogisticRegression.pkl
+      - models/RandomForest.pkl
+      - models/GradientBoosting.pkl
+      - models/DecisionTree.pkl
+      - models/KNeighbors.pkl
+      - models/SVC_linear.pkl
+      - models/SVC_rbf.pkl
+      - models/LinearSVC.pkl
+      - models/GaussianNB.pkl
+      - models/MultinomialNB.pkl
+      - models/BernoulliNB.pkl
+      - models/AdaBoost.pkl
+      - models/ExtraTrees.pkl
+      - models/Bagging.pkl
+      - models/RidgeClassifier.pkl
+
     metrics:
-    - metrics.json:
+    - metrics/metrics.json:
         cache: false
