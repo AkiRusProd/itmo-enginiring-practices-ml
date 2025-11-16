@@ -1,1 +1,16 @@
 /model.pkl
+/LogisticRegression.pkl
+/RandomForest.pkl
+/GradientBoosting.pkl
+/DecisionTree.pkl
+/KNeighbors.pkl
+/SVC_linear.pkl
+/SVC_rbf.pkl
+/LinearSVC.pkl
+/GaussianNB.pkl
+/MultinomialNB.pkl
+/BernoulliNB.pkl
+/AdaBoost.pkl
+/ExtraTrees.pkl
+/Bagging.pkl
+/RidgeClassifier.pkl
