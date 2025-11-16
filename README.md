@@ -6,12 +6,38 @@
 
 Template for course enginiring-practices-ml
 
+# Отчет о настройке рабочего места Data Scientist
+
+## 1. Структура проекта
+- Использован Cookiecutter Data Science
+- Созданы папки: src, notebooks, tests
+- Добавлен README.md
+
+## 2. Качество кода
+- Настроены pre-commit hooks: Black, isort, Ruff, MyPy, Bandit
+- Создан pyproject.toml
+- Выполнены тестовые коммиты — приложены скриншоты
+
+## 3. Управление зависимостями
+- Использован Poetry
+- Создан Dockerfile
+- Сформирован requirements.txt
+
+## 4. Git workflow
+- Создан .gitignore
+- Созданы ветки master, hw1
+
+## 5. Скриншоты
+(вставить сюда скриншоты настроек, структуры папок, вывода команд)
+
+
 ## Project Organization
 
 ```
 ├── LICENSE            <- Open-source license if one is chosen
 ├── Makefile           <- Makefile with convenience commands like `make data` or `make train`
 ├── README.md          <- The top-level README for developers using this project.
+├── Dockerfile         <- Dockerfile boilerplate  
 ├── data
 │   ├── external       <- Data from third party sources.
 │   ├── interim        <- Intermediate data that has been transformed.
