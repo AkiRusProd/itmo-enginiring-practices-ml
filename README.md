@@ -6,27 +6,6 @@
 
 Template for course enginiring-practices-ml
 
-# Отчет о настройке рабочего места Data Scientist
-
-## 1. Структура проекта
-- Использован Cookiecutter Data Science
-- Созданы папки: src, notebooks, tests
-- Добавлен README.md
-
-## 2. Качество кода
-- Настроены pre-commit hooks: Black, isort, Ruff, MyPy, Bandit
-- Создан pyproject.toml
-- Выполнены тестовые коммиты — приложены скриншоты
-
-## 3. Управление зависимостями
-- Использован Poetry
-- Создан Dockerfile
-- Сформирован requirements.txt
-
-## 4. Git workflow
-- Создан .gitignore
-- Созданы ветки master, hw1
-
 ## Project Organization
 
 ```
@@ -78,6 +57,57 @@ Template for course enginiring-practices-ml
     │
     └── plots.py                <- Code to create visualizations
 ```
+
+
+# Отчет о настройке рабочего места Data Scientist
+
+## 1. Структура проекта
+- Использован [Cookiecutter Data Science](https://cookiecutter-data-science.drivendata.org/)
+  ```bash
+    pip install cookiecutter-data-science
+    ccds https://github.com/drivendataorg/cookiecutter-data-science
+  ```
+- Созданы папки: src, notebooks, tests итд
+- Добавлен README.md
+
+
+## 2. Качество кода
+- Настроены pre-commit hooks: Black, isort, Ruff, MyPy, Bandit
+- Создан pyproject.toml
+- Выполнены тестовые коммиты
+  * Скриншот
+
+## 3. Управление зависимостями
+- Использован Poetry
+  * Команды
+    ```
+    python3 -m venv .venv
+    source .venv/bin/activate
+    poetry install
+    ```
+
+  * Установка зависимостей через poetry
+  ![alt text](images/install_libs.png)
+- Создан Dockerfile
+  * Команды
+    ```
+    docker build -t itmo-enginiring-practices-ml .
+    docker run --rm itmo-enginiring-practices-ml
+    ```
+  * Пример сборки
+  ![alt text](images/docker_build.png)
+  * Запуск и уничтожение контейнера
+  ![alt text](images/docker_run.png)
+
+- Сформирован requirements.txt
+    ```
+    poetry export -f requirements.txt --output requirements.txt --without-hashes
+    ```
+
+## 4. Git workflow
+- Создан .gitignore
+- Созданы ветки master, hw1
+
 
 --------
 
