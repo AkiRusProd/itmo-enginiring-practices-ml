@@ -26,10 +26,6 @@ isort = "^6.0"
 ruff = "^0.0"
 mypy = "^1.0"
 
-[build-system]
-requires = ["poetry-core>=1.4.0"]
-build-backend = "poetry.core.masonry.api"
-
 [tool.black]
 line-length = 88
 target-version = ["py310"]
@@ -44,3 +40,9 @@ ignore = ["E501"]
 [tool.mypy]
 python_version = 3.10
 ignore_missing_imports = true
+exclude = ["venv", "tests"]
+
+[build-system]
+requires = ["poetry-core>=1.4.0"]
+build-backend = "poetry.core.masonry.api"
+
