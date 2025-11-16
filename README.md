@@ -27,10 +27,6 @@ Template for course enginiring-practices-ml
 - Создан .gitignore
 - Созданы ветки master, hw1
 
-## 5. Скриншоты
-(вставить сюда скриншоты настроек, структуры папок, вывода команд)
-
-
 ## Project Organization
 
 ```
