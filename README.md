@@ -129,6 +129,10 @@ Template for course enginiring-practices-ml
 
 ## 3. Воспроизводимость
 - Версии уже зафиксированы
+  ```
+  poetry lock
+  poetry export -f requirements.txt --output requirements.txt --without-hashes
+  ```
 - Инструкция по воспроизведению
   ```
     git clone --branch feature/hw2 https://github.com/AkiRusProd/itmo-enginiring-practices-ml.git
