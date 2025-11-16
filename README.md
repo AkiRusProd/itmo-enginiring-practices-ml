@@ -162,4 +162,18 @@ Directory structure:
 
 ## 3.	Интеграция с кодом:
 Инструмент логирования интегрирован в код через `src/utils.py`, в виде декораторов и контекстных менеджеров. Испольузется непосредственно в `train.py`
+Пример встраивания:
+```python
+@log_experiment()
+def train_model(name, model, X_train, y_train, X_val, y_val, writer=None):
+    model.fit(X_train, y_train)
+    preds = model.predict(X_val)
+    acc = accuracy_score(y_val, preds)
+
+    writer.add_scalar("Accuracy", acc, 0)
+    writer.add_text("Params", str(model.get_params()), 0)
+
+    save_model(model, f"{MODEL_DIR}/{name}.pkl")
+    return acc
+```
 
