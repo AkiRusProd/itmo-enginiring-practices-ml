@@ -1,10 +1,10 @@
 from pathlib import Path
 
+import typer
 from loguru import logger
 from tqdm import tqdm
-import typer
 
-from itmo_enginiring_practices_ml.config import PROCESSED_DATA_DIR, RAW_DATA_DIR
+from src.config import PROCESSED_DATA_DIR, RAW_DATA_DIR
 
 app = typer.Typer()
 

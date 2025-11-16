@@ -28,7 +28,7 @@ Template for course enginiring-practices-ml
 │                         `1.0-jqp-initial-data-exploration`.
 │
 ├── pyproject.toml     <- Project configuration file with package metadata for 
-│                         itmo_enginiring_practices_ml and configuration for tools like black
+│                         src and configuration for tools like black
 │
 ├── references         <- Data dictionaries, manuals, and all other explanatory materials.
 │
@@ -40,9 +40,9 @@ Template for course enginiring-practices-ml
 │
 ├── setup.cfg          <- Configuration file for flake8
 │
-└── itmo_enginiring_practices_ml   <- Source code for use in this project.
+└── src   <- Source code for use in this project.
     │
-    ├── __init__.py             <- Makes itmo_enginiring_practices_ml a Python module
+    ├── __init__.py             <- Makes src a Python module
     │
     ├── config.py               <- Store useful variables and configuration
     │
@@ -73,6 +73,9 @@ Template for course enginiring-practices-ml
 
 ## 2. Качество кода
 - Настроены pre-commit hooks: Black, isort, Ruff, MyPy, Bandit
+  ```
+  pre-commit install
+  ```
 - Создан pyproject.toml
 - Выполнены тестовые коммиты
   * Скриншот
@@ -84,6 +87,7 @@ Template for course enginiring-practices-ml
     python3 -m venv .venv
     source .venv/bin/activate
     poetry install
+    poetry install --with dev
     ```
 
   * Установка зависимостей через poetry
