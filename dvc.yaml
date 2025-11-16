@@ -6,3 +6,17 @@ stages:
     - src/preprocess.py
     outs:
     - data/processed
+  train_model:
+    cmd: python src/modeling/train.py
+    deps:
+    - data/processed/processed.csv
+    - src/modeling/train.py
+    params:
+    - train.epochs
+    - train.lr
+    - train.test_size
+    outs:
+    - models/model.pkl
+    metrics:
+    - metrics.json:
+        cache: false

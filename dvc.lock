@@ -9,11 +9,36 @@ stages:
       size: 5063
     - path: src/preprocess.py
       hash: md5
-      md5: 8f1cb3983b184e5770bc300a23eebc5d
-      size: 327
+      md5: 6bc4b8ee9e3998dccb324f9b4cdb7471
+      size: 344
     outs:
     - path: data/processed
       hash: md5
       md5: 87f7b3a657ad2592c40bec4bccdb6e80.dir
       size: 1690
       nfiles: 1
+  train_model:
+    cmd: python src/modeling/train.py
+    deps:
+    - path: data/processed/processed.csv
+      hash: md5
+      md5: 0d57f4e160f7f22a8ef8e83abb6576dc
+      size: 1690
+    - path: src/modeling/train.py
+      hash: md5
+      md5: 4201dc3e608cfdbd59324f367ab08402
+      size: 1000
+    params:
+      params.yaml:
+        train.epochs: 10
+        train.lr: 0.01
+        train.test_size: 0.2
+    outs:
+    - path: metrics.json
+      hash: md5
+      md5: d937b984d4b97e7f2961b346f72fdb4a
+      size: 35
+    - path: models/model.pkl
+      hash: md5
+      md5: c775f1c99769793ab47ae6762c5101aa
+      size: 531
