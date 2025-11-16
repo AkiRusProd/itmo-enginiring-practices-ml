@@ -1,6 +1,13 @@
 import os
+import random
 
+import numpy as np
 import pandas as pd
+
+SEED = 42
+np.random.seed(SEED)
+random.seed(SEED)
+
 
 if __name__ == "__main__":
     """A mock preprocessing script that reads raw data and writes processed data."""

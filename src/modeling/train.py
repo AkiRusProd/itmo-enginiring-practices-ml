@@ -1,11 +1,18 @@
 import json
 import os
-import pickle
+import pickle  # nosec
+import random
 
+import numpy as np
 import pandas as pd
 import yaml
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
+
+SEED = 42
+np.random.seed(SEED)
+random.seed(SEED)
+
 
 if __name__ == "__main__":
     params = yaml.safe_load(open("params.yaml"))["train"]

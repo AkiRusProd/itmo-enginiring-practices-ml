@@ -30,6 +30,7 @@ mypy = "^1.0"
 pre-commit = "^4.4.0"
 bandit = "^1.8.6"
 pbr = "^7.0.3"
+types-pyyaml = "^6.0.12.20250915"
 
 [tool.black]
 line-length = 88
