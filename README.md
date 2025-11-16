@@ -78,7 +78,6 @@ Template for course enginiring-practices-ml
   ```
 - Создан pyproject.toml
 - Выполнены тестовые коммиты
-  * Скриншот
    ![alt text](images/hooks_run.png)
 
 ## 3. Управление зависимостями
