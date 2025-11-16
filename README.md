@@ -129,3 +129,16 @@ Template for course enginiring-practices-ml
 
 ## 3. Воспроизводимость
 - Версии уже зафиксированы
+- Инструкция по воспроизведению
+  ```
+    git clone --branch feature/hw2 https://github.com/AkiRusProd/itmo-enginiring-practices-ml.git
+    pip install -r requirements.txt
+    dvc pull
+    dvc repro
+  ```
+- Или в контейнере
+    ```
+    docker build -t itmo-enginiring-practices-ml .
+    docker run --rm itmo-enginiring-practices-ml
+    ```
+    ![alt text](images/dvc_docker.png)

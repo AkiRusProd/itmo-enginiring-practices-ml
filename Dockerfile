@@ -9,4 +9,4 @@ RUN pip install --upgrade pip && \
 
 COPY . /app
 
-CMD ["python", "src/main.py"]
+CMD ["dvc", "repro"]
