@@ -1,5 +1,6 @@
 import json
 import random
+from datetime import datetime
 from pathlib import Path
 
 import numpy as np
@@ -52,6 +53,9 @@ best_model = None
 best_acc = -1
 
 for i, (name, model) in enumerate(MODELS.items(), start=1):
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    exp_name = f"exp_{i}_{name}_{timestamp}"
+
     acc = train_model(
         name,
         model,
@@ -59,7 +63,7 @@ for i, (name, model) in enumerate(MODELS.items(), start=1):
         y_train,
         X_val,
         y_val,
-        exp_name=f"experiment_{i}_{name}",
+        exp_name=exp_name,
         log_dir=LOG_DIR,
     )
     metrics[name] = acc
