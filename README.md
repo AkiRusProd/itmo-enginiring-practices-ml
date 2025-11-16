@@ -59,59 +59,21 @@ Template for course enginiring-practices-ml
 ```
 
 
-# Отчет о настройке рабочего места Data Scientist (ДЗ1)
-
-## 1. Структура проекта
-- Использован [Cookiecutter Data Science](https://cookiecutter-data-science.drivendata.org/)
-  ```bash
-    pip install cookiecutter-data-science
-    ccds https://github.com/drivendataorg/cookiecutter-data-science
-  ```
-- Созданы папки: src, notebooks, tests итд
-- Добавлен README.md
+# Отчет по версионированию данных и моделей (ДЗ2)
 
 
-## 2. Качество кода
-- Настроены pre-commit hooks: Black, isort, Ruff, MyPy, Bandit
-  ```
-  pre-commit install
-  ```
-- Создан pyproject.toml
-- Выполнены тестовые коммиты
-   ![alt text](images/hooks_run.png)
-
-## 3. Управление зависимостями
-- Использован Poetry
-  * Команды
+## 1. Настройка версионирования данных (DVC)
+- Установка и инициализация
     ```
-    python3 -m venv .venv
-    source .venv/bin/activate
-    poetry install
-    poetry install --with dev
+    poetry add dvc
+    dvc init
     ```
-
-  * Установка зависимостей через poetry
-  ![alt text](images/install_libs.png)
-- Создан Dockerfile
-  * Команды
+    ![alt text](images/dvc_init.png)
+- Настройка remote storage (Local)
     ```
-    docker build -t itmo-enginiring-practices-ml .
-    docker run --rm itmo-enginiring-practices-ml
+    mkdir localstore
+    mkdir dvc_storage
+    dvc remote add -d localstore dvc_storage
+    git add .dvc/config
+    git commit -m "Set DVC remote (local)"
     ```
-  * Пример сборки
-  ![alt text](images/docker_build.png)
-  * Запуск и уничтожение контейнера
-  ![alt text](images/docker_run.png)
-
-- Сформирован requirements.txt
-    ```
-    poetry export -f requirements.txt --output requirements.txt --without-hashes
-    ```
-
-## 4. Git workflow
-- Создан .gitignore
-- Созданы ветки master, hw1
-
-
---------
-
