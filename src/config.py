@@ -13,6 +13,7 @@ from sklearn.tree import DecisionTreeClassifier
 
 SEED = 42
 
+RAW_DATA_PATH = "data/raw/dataset.csv"
 DATA_PATH = "data/processed/processed.csv"
 MODEL_DIR = "models"
 LOG_DIR = "logs"

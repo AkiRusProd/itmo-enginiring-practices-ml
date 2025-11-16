@@ -5,14 +5,13 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 
-SEED = 42
+from config import DATA_PATH, RAW_DATA_PATH, SEED
+
 np.random.seed(SEED)
 random.seed(SEED)
 
 
-def preprocess(
-    input_path="data/raw/dataset.csv", output_path="data/processed/processed.csv"
-):
+def preprocess(input_path=RAW_DATA_PATH, output_path=DATA_PATH):
     df = pd.read_csv(input_path)
 
     # Простая предобработка

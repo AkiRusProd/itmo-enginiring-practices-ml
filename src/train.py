@@ -10,6 +10,7 @@ from sklearn.model_selection import train_test_split
 from config import (
     DATA_PATH,
     FEATURES,
+    LOG_DIR,
     METRICS_DIR,
     METRICS_FILE,
     MODEL_DIR,
@@ -59,7 +60,7 @@ for i, (name, model) in enumerate(MODELS.items(), start=1):
         X_val,
         y_val,
         exp_name=f"experiment_{i}_{name}",
-        log_dir="logs",
+        log_dir=LOG_DIR,
     )
     metrics[name] = acc
 
