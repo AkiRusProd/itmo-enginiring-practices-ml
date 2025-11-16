@@ -96,4 +96,8 @@ Template for course enginiring-practices-ml
     python src/preprocess.py
     ```
     ![alt text](images/dvc_add_ver.png)
-    
+    ```
+    dvc dag
+    dvc repro
+    ```
+    ![alt text](images/dvc_dag_repro.png)
