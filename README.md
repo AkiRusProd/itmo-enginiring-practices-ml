@@ -87,7 +87,7 @@ Directory structure:
     ![alt text](images/dvc_set_store.png)
 
 
-## 2. Версионирование моделей и данных в DVC
+### 1.1. Версионирование моделей и данных в DVC
 - Конфиг со стейджами для версионирования `dvc.yaml` в DVC:
     ```yaml
         stages:
@@ -147,19 +147,15 @@ Directory structure:
   ```
   ![alt text](images/dvc_run_exps.png)
 
-## 3. Воспроизводимость
-- Версии уже зафиксированы
-- Инструкция по воспроизведению
-  ```
-    git clone --branch feature/hw2 https://github.com/AkiRusProd/itmo-enginiring-practices-ml.git
-    pip install -r requirements.txt
-    dvc pull
-    dvc repro
-  ```
-- Или в контейнере
+## 2. Проведение экспериментов 
+- Запуск Тензорборда осуществляется командой:
     ```
-    docker build -t itmo-enginiring-practices-ml .
-    docker run --rm itmo-enginiring-practices-ml
+    tensorboard --logdir logs
     ```
-    ![alt text](images/dvc_docker.png)
-    Ничего не изменилось
+    ![alt text](images/tb_run.png)
+- Если перейти по ссылке, то можно увидеть
+    ![alt text](images/tb.png)
+- Проведено 15 экспериментов с разными алгоритмами
+- логирование метрик осуществляется через tensorboard, параметры и артефакты через dvc.
+- Сравнивать, фильтровать и искать информацию можно средставми tensorboard, но и dvc. Пример сравнения через dvc:
+
