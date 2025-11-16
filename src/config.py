@@ -1,3 +1,4 @@
+import yaml
 from sklearn.ensemble import (
     AdaBoostClassifier,
     BaggingClassifier,
@@ -11,7 +12,10 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC, LinearSVC
 from sklearn.tree import DecisionTreeClassifier
 
-SEED = 42
+params = yaml.safe_load(open("params.yaml"))["train"]
+
+SEED = params["seed"]  # 42
+TEST_SIZE = params["test_size"]  # 0.2
 
 RAW_DATA_PATH = "data/raw/dataset.csv"
 DATA_PATH = "data/processed/processed.csv"
@@ -22,7 +26,6 @@ METRICS_FILE = f"{METRICS_DIR}/metrics.json"
 
 FEATURES = ["Pclass", "Sex", "Age", "SibSp", "Parch", "Fare", "Embarked"]
 TARGET = "Survived"
-TEST_SIZE = 0.2
 
 MODELS = {
     "LogisticRegression": LogisticRegression(max_iter=200),

@@ -107,9 +107,8 @@ Directory structure:
             - src/utils.py
             - src/preprocess.py
             params:
-            - train.epochs
-            - train.lr
             - train.test_size
+            - train.seed
             outs:
             - models/LogisticRegression.pkl
             - models/RandomForest.pkl
@@ -141,8 +140,7 @@ Directory structure:
 
 - Сравнение версий модели.
   ```
-    dvc exp run -S train.lr=0.05
-    dvc exp run -S train.epochs=100
+    dvc exp run
     dvc exp show
   ```
   ![alt text](images/dvc_run_exps.png)
@@ -158,6 +156,6 @@ Directory structure:
 - Параметры также логируются
     ![alt text](images/tb_params.png)
 - Проведено 15 экспериментов с разными алгоритмами
-- логирование метрик осуществляется через tensorboard, параметры и артефакты через dvc.
-- Сравнивать, фильтровать и искать информацию можно средставми tensorboard, но и dvc. Пример сравнения через dvc:
+- Логирование метрик осуществляется через tensorboard, параметры и артефакты через dvc.
+- Сравнивать, фильтровать и искать информацию можно средствами tensorboard.
 

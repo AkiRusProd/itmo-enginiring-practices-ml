@@ -15,9 +15,8 @@ stages:
     - src/utils.py
     - src/preprocess.py
     params:
-    - train.epochs
-    - train.lr
     - train.test_size
+    - train.seed
     outs:
       - models/LogisticRegression.pkl
       - models/RandomForest.pkl
