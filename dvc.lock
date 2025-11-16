@@ -26,8 +26,8 @@ stages:
       size: 59411
     - path: src/config.py
       hash: md5
-      md5: e6d4c2f229eae8ec80bed5ab7cfaf0e0
-      size: 1540
+      md5: 5dc322902121a6e796c89a8325313319
+      size: 1651
     - path: src/preprocess.py
       hash: md5
       md5: 52eecbac7f709e57545dbc954f2aa11c
@@ -42,8 +42,7 @@ stages:
       size: 963
     params:
       params.yaml:
-        train.epochs: 15
-        train.lr: 0.01
+        train.seed: 42
         train.test_size: 0.2
     outs:
     - path: metrics/metrics.json
