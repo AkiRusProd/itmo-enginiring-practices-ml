@@ -59,16 +59,25 @@ Template for course enginiring-practices-ml
 ```
 
 
-# Отчет по версионированию данных и моделей (ДЗ2)
+# Отчет по трекину экспериментов (ДЗ3)
 
+Прежде всего добавим tensorboard к стеку dvc. Также я решил взять датасет побольше - [Titanic Dataset](https://www.kaggle.com/competitions/titanic/data). 
 
-## 1. Настройка версионирования данных (DVC)
+## 1. Настройка выбранного инструмента (Tensorboard)
 - Установка и инициализация
     ```
-    poetry add dvc
-    dvc init
+    poetry add tensorboard
+    poetry add tensorboardX
     ```
-    ![alt text](images/dvc_init.png)
+    Логировать будем в logs
+- Закинем titanic датасет
+    ```
+    ├── data/
+    │   └── raw/
+    |       └── dataset.csv     
+    ```
+
+
 - Настройка remote storage (Local)
     ```
     mkdir localstore
@@ -79,45 +88,58 @@ Template for course enginiring-practices-ml
     ```
     ![alt text](images/dvc_set_store.png)
 
-- Версионирование данных
-    В качестве датасета был взят https://www.kaggle.com/datasets/crawford/80-cereals и переименован в `dataset.csv`
+
+## 2. Версионирование моделей и данных в DVC
+- Конфиг со стейджами для версионирования `dvc.yaml` в DVC:
+    ```yaml
+        stages:
+        preprocess:
+            cmd: python src/preprocess.py
+            deps:
+            - data/raw/dataset.csv
+            - src/preprocess.py
+            outs:
+            - data/processed
+        train_model:
+            cmd: python src/train.py
+            deps:
+            - data/processed/processed.csv
+            - src/train.py
+            - src/config.py
+            - src/utils.py
+            - src/preprocess.py
+            params:
+            - train.epochs
+            - train.lr
+            - train.test_size
+            outs:
+            - models/LogisticRegression.pkl
+            - models/RandomForest.pkl
+            - models/GradientBoosting.pkl
+            - models/DecisionTree.pkl
+            - models/KNeighbors.pkl
+            - models/SVC_linear.pkl
+            - models/SVC_rbf.pkl
+            - models/LinearSVC.pkl
+            - models/GaussianNB.pkl
+            - models/MultinomialNB.pkl
+            - models/BernoulliNB.pkl
+            - models/AdaBoost.pkl
+            - models/ExtraTrees.pkl
+            - models/Bagging.pkl
+            - models/RidgeClassifier.pkl
+
+            metrics:
+            - metrics/metrics.json:
+                cache: false
+
+
     ```
-    dvc add data/raw/dataset.csv
-    git add data/raw/dataset.csv.dvc .gitignore
-    git commit -m "Versioned dataset"
+    Выполнение:
     ```
-    ![alt text](images/dvc_dataset_add.png)
-- Автоматическое создание версий
-    ```
-    dvc stage add -n preprocess \
-    -d src/preprocess.py \
-    -d data/raw/dataset.csv \
-    -o data/processed \
-    python src/preprocess.py
-    ```
-    ![alt text](images/dvc_add_ver.png)
-    ```
-    dvc dag
     dvc repro
     ```
-    ![alt text](images/dvc_dag_repro.png)
-## 2. Версионирование моделей в DVC
-- Написание `src/modeling/train.py`, `params.yaml` и создание DVC stage:
-    ```
-    dvc stage add -n train_model \
-        -d src/modeling/train.py \
-        -d data/processed/processed.csv \
-        -p train.lr,train.epochs,train.test_size \
-        -o models/model.pkl \
-        -M metrics.json \
-        python src/modeling/train.py
-    ```
-    ![alt text](images/dvc_train_model.png)
-    ```
-    dvc dag
-    dvc repro
-    ```
-    ![alt text](images/dvc_dag_repro_with_model.png)
+    ![alt text](images/dvc_repro.png)
 
 - Сравнение версий модели.
   ```

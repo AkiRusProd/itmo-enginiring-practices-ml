@@ -1,32 +1,42 @@
-from pathlib import Path
+from sklearn.ensemble import (
+    AdaBoostClassifier,
+    BaggingClassifier,
+    ExtraTreesClassifier,
+    GradientBoostingClassifier,
+    RandomForestClassifier,
+)
+from sklearn.linear_model import LogisticRegression, RidgeClassifier
+from sklearn.naive_bayes import BernoulliNB, GaussianNB, MultinomialNB
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC, LinearSVC
+from sklearn.tree import DecisionTreeClassifier
 
-from dotenv import load_dotenv
-from loguru import logger
+SEED = 42
 
-# Load environment variables from .env file if it exists
-load_dotenv()
+DATA_PATH = "data/processed/processed.csv"
+MODEL_DIR = "models"
+LOG_DIR = "logs"
+METRICS_DIR = "metrics"
+METRICS_FILE = f"{METRICS_DIR}/metrics.json"
 
-# Paths
-PROJ_ROOT = Path(__file__).resolve().parents[1]
-logger.info(f"PROJ_ROOT path is: {PROJ_ROOT}")
+FEATURES = ["Pclass", "Sex", "Age", "SibSp", "Parch", "Fare", "Embarked"]
+TARGET = "Survived"
+TEST_SIZE = 0.2
 
-DATA_DIR = PROJ_ROOT / "data"
-RAW_DATA_DIR = DATA_DIR / "raw"
-INTERIM_DATA_DIR = DATA_DIR / "interim"
-PROCESSED_DATA_DIR = DATA_DIR / "processed"
-EXTERNAL_DATA_DIR = DATA_DIR / "external"
-
-MODELS_DIR = PROJ_ROOT / "models"
-
-REPORTS_DIR = PROJ_ROOT / "reports"
-FIGURES_DIR = REPORTS_DIR / "figures"
-
-# If tqdm is installed, configure loguru with tqdm.write
-# https://github.com/Delgan/loguru/issues/135
-try:
-    from tqdm import tqdm
-
-    logger.remove(0)
-    logger.add(lambda msg: tqdm.write(msg, end=""), colorize=True)
-except ModuleNotFoundError:
-    pass
+MODELS = {
+    "LogisticRegression": LogisticRegression(max_iter=200),
+    "RandomForest": RandomForestClassifier(n_estimators=100),
+    "GradientBoosting": GradientBoostingClassifier(),
+    "DecisionTree": DecisionTreeClassifier(),
+    "KNeighbors": KNeighborsClassifier(),
+    "SVC_linear": SVC(kernel="linear", probability=True),
+    "SVC_rbf": SVC(kernel="rbf", probability=True),
+    "LinearSVC": LinearSVC(max_iter=2000),
+    "GaussianNB": GaussianNB(),
+    "MultinomialNB": MultinomialNB(),
+    "BernoulliNB": BernoulliNB(),
+    "AdaBoost": AdaBoostClassifier(n_estimators=100),
+    "ExtraTrees": ExtraTreesClassifier(n_estimators=100),
+    "Bagging": BaggingClassifier(n_estimators=100),
+    "RidgeClassifier": RidgeClassifier(),
+}

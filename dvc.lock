@@ -9,8 +9,8 @@ stages:
       size: 60302
     - path: src/preprocess.py
       hash: md5
-      md5: 98d2016c3f06e5cf85891f77affd16a2
-      size: 872
+      md5: c43708d6924125f03822a987d519bb2a
+      size: 873
     outs:
     - path: data/processed
       hash: md5
@@ -18,16 +18,28 @@ stages:
       size: 59411
       nfiles: 1
   train_model:
-    cmd: python src/modeling/train.py
+    cmd: python src/train.py
     deps:
     - path: data/processed/processed.csv
       hash: md5
       md5: 3faebfde8e1f49ca1a127d6908e25c3a
       size: 59411
-    - path: src/modeling/train.py
+    - path: src/config.py
       hash: md5
-      md5: e448ef0b019286166c37cbb9c9a51ef2
-      size: 4465
+      md5: 3e2320c51e8ca89b2aafe813b49c8aad
+      size: 1484
+    - path: src/preprocess.py
+      hash: md5
+      md5: c43708d6924125f03822a987d519bb2a
+      size: 873
+    - path: src/train.py
+      hash: md5
+      md5: 8e7fa68ee50adc3302dc3c5540baad74
+      size: 1559
+    - path: src/utils.py
+      hash: md5
+      md5: fc794a535e9eee752f62e6fe2f6071ce
+      size: 960
     params:
       params.yaml:
         train.epochs: 15
