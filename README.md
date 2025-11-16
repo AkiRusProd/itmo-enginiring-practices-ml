@@ -59,7 +59,7 @@ Template for course enginiring-practices-ml
 ```
 
 
-# Отчет о настройке рабочего места Data Scientist
+# Отчет о настройке рабочего места Data Scientist (ДЗ1)
 
 ## 1. Структура проекта
 - Использован [Cookiecutter Data Science](https://cookiecutter-data-science.drivendata.org/)
