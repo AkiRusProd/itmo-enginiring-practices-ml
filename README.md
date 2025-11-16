@@ -76,6 +76,7 @@ Directory structure:
     ![alt text](images/dvc_set_store.png)
 
 - Версионирование данных
+    
     В качестве датасета был взят https://www.kaggle.com/datasets/crawford/80-cereals и переименован в `dataset.csv`
     ```
     dvc add data/raw/dataset.csv
