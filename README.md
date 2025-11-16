@@ -101,3 +101,28 @@ Template for course enginiring-practices-ml
     dvc repro
     ```
     ![alt text](images/dvc_dag_repro.png)
+## 2. Версионирование моделей в DVC
+- Написание `src/modeling/train.py`, `params.yaml` и создание DVC stage:
+    ```
+    dvc stage add -n train_model \
+        -d src/modeling/train.py \
+        -d data/processed/processed.csv \
+        -p train.lr,train.epochs,train.test_size \
+        -o models/model.pkl \
+        -M metrics.json \
+        python src/modeling/train.py
+    ```
+    ![alt text](images/dvc_train_model.png)
+    ```
+    dvc dag
+    dvc repro
+    ```
+    ![alt text](images/dvc_dag_repro_with_model.png)
+
+- Сравнение версий модели.
+  ```
+    dvc exp run -S train.lr=0.05
+    dvc exp run -S train.epochs=100
+    dvc exp show
+  ```
+  ![alt text](images/dvc_run_exps.png)
