@@ -126,3 +126,6 @@ Template for course enginiring-practices-ml
     dvc exp show
   ```
   ![alt text](images/dvc_run_exps.png)
+
+## 3. Воспроизводимость
+- Версии уже зафиксированы
