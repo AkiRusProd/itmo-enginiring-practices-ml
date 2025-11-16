@@ -26,11 +26,11 @@ stages:
       size: 1690
     - path: src/modeling/train.py
       hash: md5
-      md5: 4201dc3e608cfdbd59324f367ab08402
-      size: 1000
+      md5: 368ab852362c9ff568c75027d1417b13
+      size: 1002
     params:
       params.yaml:
-        train.epochs: 10
+        train.epochs: 15
         train.lr: 0.01
         train.test_size: 0.2
     outs:

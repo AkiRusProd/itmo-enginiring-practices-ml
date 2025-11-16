@@ -1,4 +1,4 @@
 train:
   lr: 0.01
-  epochs: 10
+  epochs: 15
   test_size: 0.2
