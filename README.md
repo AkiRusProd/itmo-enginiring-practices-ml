@@ -142,3 +142,4 @@ Template for course enginiring-practices-ml
     docker run --rm itmo-enginiring-practices-ml
     ```
     ![alt text](images/dvc_docker.png)
+    Ничего не изменилось
