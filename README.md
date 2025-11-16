@@ -77,3 +77,22 @@ Template for course enginiring-practices-ml
     git add .dvc/config
     git commit -m "Set DVC remote (local)"
     ```
+    ![alt text](images/dvc_set_store.png)
+
+- Версионирование данных
+    ```
+    dvc add data/raw/dataset.csv
+    git add data/raw/dataset.csv.dvc .gitignore
+    git commit -m "Versioned dataset"
+    ```
+    ![alt text](images/dvc_dataset_add.png)
+- Автоматическое создание версий
+    ```
+    dvc stage add -n preprocess \
+    -d src/preprocess.py \
+    -d data/raw/dataset.csv \
+    -o data/processed \
+    python src/preprocess.py
+    ```
+    ![alt text](images/dvc_add_ver.png)
+    
