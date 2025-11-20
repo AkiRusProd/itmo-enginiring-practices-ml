@@ -1,16 +1,11 @@
 {
-    "accuracy": 0.9472502805836139,
-    "precision": 0.9473518778125454,
-    "recall": 0.9472502805836139,
-    "f1": 0.9470143723464648,
-    "confusion_matrix": [
-        [
-            533,
-            16
-        ],
-        [
-            31,
-            311
-        ]
-    ]
+    "AdaBoost": 0.7968266984924256,
+    "LogisticRegression": 0.8091929317716401,
+    "Bagging": 0.8091929317716401,
+    "SVC": 0.6071190540464283,
+    "DecisionTree": 0.7968266984924256,
+    "RandomForest": 0.8199351290861244,
+    "GradientBoosting": 0.8074907442165153,
+    "best_model": "RandomForest",
+    "best_accuracy": 0.8199351290861244
 }

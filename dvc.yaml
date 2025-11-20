@@ -2,26 +2,41 @@ stages:
   preprocess:
     cmd: python src/preprocess.py
     deps:
-    - data/raw/dataset.csv
-    - src/preprocess.py
+      - data/raw/dataset.csv
+      - src/preprocess.py
     outs:
-    - data/processed
+      - data/processed/processed.csv
+
   train_models:
-    cmd: python src/train.py
+    foreach: ${models}
+    do:
+      cmd: python src/train_single.py --model ${key}
+      deps:
+        - data/processed/processed.csv
+        - src/train_single.py
+        - src/config.py
+        - src/utils.py
+      params:
+        - train
+        - models
+      outs:
+        - models/${key}.pkl
+      metrics:
+        - metrics/train_models/${key}_metrics.json:
+            cache: false
+
+
+  select_best:
+    cmd: python src/select_best.py
     deps:
-    - data/processed/processed.csv
-    - src/train.py
-    - src/config.py
-    - src/utils.py
-    - src/preprocess.py
-    params:
-      - train
-      - models
-    outs:
-      - models
+      - src/select_best.py
+      - metrics/train_models
     metrics:
-      - metrics/metrics.json:
+      - metrics/best_model_metrics.json:
           cache: false
+    outs:
+      - models/best_model.pkl
+
   evaluate:
     cmd: python src/eval.py
     deps:
@@ -29,5 +44,5 @@ stages:
       - models/best_model.pkl
       - data/processed/processed.csv
     metrics:
-      - metrics/best_model_metrics.json:
+      - metrics/best_model_advanced_metrics.json:
           cache: false
