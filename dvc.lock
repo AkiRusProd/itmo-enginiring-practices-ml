@@ -118,16 +118,16 @@ stages:
       size: 59411
     - path: src/config.py
       hash: md5
-      md5: 0751d527799f4eb2113f72c47055b55b
-      size: 2062
+      md5: 22cb21f211d5063b892c1816ea6733db
+      size: 2096
     - path: src/preprocess.py
       hash: md5
       md5: 52eecbac7f709e57545dbc954f2aa11c
       size: 878
     - path: src/train.py
       hash: md5
-      md5: 03d9b0c86e8039c2b94ae656588aaf74
-      size: 1869
+      md5: 0698a4f448d3d537f3a14e2049e62522
+      size: 2036
     - path: src/utils.py
       hash: md5
       md5: 7e441c1aa5b4d9aab431e42f065c1a0f
@@ -160,6 +160,26 @@ stages:
       size: 621
     - path: models
       hash: md5
-      md5: ab523fe57ad4e0e422fd0d9d07830f60.dir
-      size: 9001239
-      nfiles: 14
+      md5: 296fe525110f659a5f38ed8354764945.dir
+      size: 11442035
+      nfiles: 15
+  evaluate:
+    cmd: python src/eval.py
+    deps:
+    - path: data/processed/processed.csv
+      hash: md5
+      md5: 3faebfde8e1f49ca1a127d6908e25c3a
+      size: 59411
+    - path: models/best_model.pkl
+      hash: md5
+      md5: f459985bcb2c642fd67ebb2071330db4
+      size: 2440796
+    - path: src/eval.py
+      hash: md5
+      md5: bb422e1f80cd06a01f0bdfedfcca880e
+      size: 1175
+    outs:
+    - path: metrics/best_model_metrics.json
+      hash: md5
+      md5: 041b1ba1785112cd0bdc380beee9390e
+      size: 277

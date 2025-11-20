@@ -77,6 +77,9 @@ for i, (name, model) in enumerate(MODELS.items(), start=1):
 metrics["best_model"] = best_model
 metrics["best_accuracy"] = best_acc
 
+best_model_path = Path(MODEL_DIR) / "best_model.pkl"
+save_model(MODELS[best_model], best_model_path)
+print(f"Best model ({best_model}) saved to {best_model_path}")
 
 Path(METRICS_DIR).mkdir(parents=True, exist_ok=True)
 with open(METRICS_FILE, "w") as f:

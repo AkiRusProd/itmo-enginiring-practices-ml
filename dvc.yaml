@@ -22,3 +22,12 @@ stages:
     metrics:
       - metrics/metrics.json:
           cache: false
+  evaluate:
+    cmd: python src/eval.py
+    deps:
+      - src/eval.py
+      - models/best_model.pkl
+      - data/processed/processed.csv
+    metrics:
+      - metrics/best_model_metrics.json:
+          cache: false
