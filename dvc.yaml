@@ -6,7 +6,7 @@ stages:
     - src/preprocess.py
     outs:
     - data/processed
-  train_model:
+  train_models:
     cmd: python src/train.py
     deps:
     - data/processed/processed.csv
@@ -15,25 +15,10 @@ stages:
     - src/utils.py
     - src/preprocess.py
     params:
-    - train.test_size
-    - train.seed
+      - train
+      - models
     outs:
-      - models/LogisticRegression.pkl
-      - models/RandomForest.pkl
-      - models/GradientBoosting.pkl
-      - models/DecisionTree.pkl
-      - models/KNeighbors.pkl
-      - models/SVC_linear.pkl
-      - models/SVC_rbf.pkl
-      - models/LinearSVC.pkl
-      - models/GaussianNB.pkl
-      - models/MultinomialNB.pkl
-      - models/BernoulliNB.pkl
-      - models/AdaBoost.pkl
-      - models/ExtraTrees.pkl
-      - models/Bagging.pkl
-      - models/RidgeClassifier.pkl
-
+      - models
     metrics:
-    - metrics/metrics.json:
-        cache: false
+      - metrics/metrics.json:
+          cache: false

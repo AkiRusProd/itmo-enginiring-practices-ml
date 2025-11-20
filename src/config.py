@@ -12,10 +12,14 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC, LinearSVC
 from sklearn.tree import DecisionTreeClassifier
 
-params = yaml.safe_load(open("params.yaml"))["train"]
+params = yaml.safe_load(open("params.yaml"))
+train_cfg = params["train"]
 
-SEED = params["seed"]  # 42
-TEST_SIZE = params["test_size"]  # 0.2
+params = yaml.safe_load(open("params.yaml"))
+models_cfg = params["models"]
+
+SEED = train_cfg["seed"]  # 42
+TEST_SIZE = train_cfg["test_size"]  # 0.2
 
 RAW_DATA_PATH = "data/raw/dataset.csv"
 DATA_PATH = "data/processed/processed.csv"
@@ -28,19 +32,22 @@ FEATURES = ["Pclass", "Sex", "Age", "SibSp", "Parch", "Fare", "Embarked"]
 TARGET = "Survived"
 
 MODELS = {
-    "LogisticRegression": LogisticRegression(max_iter=200),
-    "RandomForest": RandomForestClassifier(n_estimators=100),
-    "GradientBoosting": GradientBoostingClassifier(),
-    "DecisionTree": DecisionTreeClassifier(),
-    "KNeighbors": KNeighborsClassifier(),
-    "SVC_linear": SVC(kernel="linear", probability=True),
-    "SVC_rbf": SVC(kernel="rbf", probability=True),
-    "LinearSVC": LinearSVC(max_iter=2000),
-    "GaussianNB": GaussianNB(),
-    "MultinomialNB": MultinomialNB(),
-    "BernoulliNB": BernoulliNB(),
-    "AdaBoost": AdaBoostClassifier(n_estimators=100),
-    "ExtraTrees": ExtraTreesClassifier(n_estimators=100),
-    "Bagging": BaggingClassifier(n_estimators=100),
-    "RidgeClassifier": RidgeClassifier(),
+    "LogisticRegression": LogisticRegression(
+        **models_cfg.get("LogisticRegression", {})
+    ),
+    "RandomForest": RandomForestClassifier(**models_cfg.get("RandomForest", {})),
+    "GradientBoosting": GradientBoostingClassifier(
+        **models_cfg.get("GradientBoosting", {})
+    ),
+    "DecisionTree": DecisionTreeClassifier(**models_cfg.get("DecisionTree", {})),
+    "KNeighbors": KNeighborsClassifier(**models_cfg.get("KNeighbors", {})),
+    "SVC": SVC(**models_cfg.get("SVC", {})),
+    "LinearSVC": LinearSVC(**models_cfg.get("LinearSVC", {})),
+    "GaussianNB": GaussianNB(**models_cfg.get("GaussianNB", {})),
+    "MultinomialNB": MultinomialNB(**models_cfg.get("MultinomialNB", {})),
+    "BernoulliNB": BernoulliNB(**models_cfg.get("BernoulliNB", {})),
+    "AdaBoost": AdaBoostClassifier(**models_cfg.get("AdaBoost", {})),
+    "ExtraTrees": ExtraTreesClassifier(**models_cfg.get("ExtraTrees", {})),
+    "Bagging": BaggingClassifier(**models_cfg.get("Bagging", {})),
+    "RidgeClassifier": RidgeClassifier(**models_cfg.get("RidgeClassifier", {})),
 }

@@ -228,3 +228,4 @@ __marimo__/
 .streamlit/secrets.toml
 dvc_storage/
 logs/
+/models

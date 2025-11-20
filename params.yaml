@@ -1,3 +1,21 @@
 train:
-  test_size: 0.2
   seed: 42
+  test_size: 0.2
+
+models:
+  LogisticRegression:
+    max_iter: 200
+  RandomForest:
+    n_estimators: 100
+  GradientBoosting:
+    n_estimators: 100
+  SVC:
+    kernel: 'rbf'
+    C: 1.0
+  DecisionTree:
+    max_depth: 10
+  AdaBoost:
+    n_estimators: 50
+  Bagging:
+    n_estimators: 50
+

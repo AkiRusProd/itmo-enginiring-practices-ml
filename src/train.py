@@ -25,7 +25,7 @@ from utils import log_experiment, save_model
 np.random.seed(SEED)
 random.seed(SEED)
 
-# Load
+# Load data
 df = pd.read_csv(DATA_PATH)
 X = df[FEATURES]
 y = df[TARGET]
@@ -52,6 +52,9 @@ metrics = {}
 best_model = None
 best_acc = -1
 
+# Создаем папку для моделей
+Path(MODEL_DIR).mkdir(parents=True, exist_ok=True)
+
 for i, (name, model) in enumerate(MODELS.items(), start=1):
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     exp_name = f"exp_{i}_{name}_{timestamp}"
@@ -74,8 +77,7 @@ for i, (name, model) in enumerate(MODELS.items(), start=1):
 metrics["best_model"] = best_model
 metrics["best_accuracy"] = best_acc
 
-path = Path(METRICS_DIR)
-path.mkdir(parents=True, exist_ok=True)
 
+Path(METRICS_DIR).mkdir(parents=True, exist_ok=True)
 with open(METRICS_FILE, "w") as f:
     json.dump(metrics, f, indent=4)

@@ -1,0 +1,18 @@
+{
+    "LogisticRegression": 0.8100558659217877,
+    "RandomForest": 0.8212290502793296,
+    "GradientBoosting": 0.8100558659217877,
+    "DecisionTree": 0.8044692737430168,
+    "KNeighbors": 0.7039106145251397,
+    "SVC": 0.659217877094972,
+    "LinearSVC": 0.7932960893854749,
+    "GaussianNB": 0.776536312849162,
+    "MultinomialNB": 0.7262569832402235,
+    "BernoulliNB": 0.7821229050279329,
+    "AdaBoost": 0.7988826815642458,
+    "ExtraTrees": 0.8044692737430168,
+    "Bagging": 0.7988826815642458,
+    "RidgeClassifier": 0.7932960893854749,
+    "best_model": "RandomForest",
+    "best_accuracy": 0.8212290502793296
+}
