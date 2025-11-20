@@ -20,6 +20,7 @@ from config import (
     TARGET,
     TEST_SIZE,
 )
+from schemas import BestModelMetrics
 from utils import log_experiment, save_model
 
 np.random.seed(SEED)
@@ -75,13 +76,20 @@ for i, (name, model) in enumerate(MODELS.items(), start=1):
     if f1 > best_f1:
         best_f1, best_model = f1, name
 
-metrics["best_model"] = best_model
-metrics["best_f1_score"] = best_f1
+# Validate using Pydantic schema
+best_metrics = BestModelMetrics(
+    best_model=best_model,
+    best_accuracy=best_f1,
+    models=metrics,
+)
+metrics_dict = best_metrics.model_dump(mode="json")
 
+# Save best model
 best_model_path = Path(MODEL_DIR) / "best_model.pkl"
 save_model(MODELS[best_model], best_model_path)
 print(f"Best model ({best_model}) saved to {best_model_path}")
 
+# Save metrics using validated schema
 Path(METRICS_DIR).mkdir(parents=True, exist_ok=True)
 with open(METRICS_FILE, "w") as f:
-    json.dump(metrics, f, indent=4)
+    json.dump(metrics_dict, f, indent=4)

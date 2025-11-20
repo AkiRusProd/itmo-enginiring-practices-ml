@@ -19,6 +19,7 @@ from config import (
     TARGET,
     TEST_SIZE,
 )
+from schemas import TrainMetrics
 from utils import log_experiment, save_model
 
 np.random.seed(SEED)
@@ -52,16 +53,16 @@ def train_single_model(model_name, writer=None):
     Path(MODEL_DIR).mkdir(parents=True, exist_ok=True)
     save_model(model, f"{MODEL_DIR}/{model_name}.pkl")
 
-    # Save metrics to JSON
+    # Save metrics to JSON using Pydantic validation
     metrics_path = Path(f"{METRICS_DIR}/train_models") / f"{model_name}_metrics.json"
     metrics_path.parent.mkdir(parents=True, exist_ok=True)
-    metrics = {
-        "model": model_name,
-        "f1_score": f1,
-        "timestamp": datetime.now().isoformat(),
-    }
+
+    # Validate metrics using Pydantic schema
+    metrics_obj = TrainMetrics(model=model_name, f1_score=f1)
+    metrics_dict = metrics_obj.model_dump(mode="json")
+
     with open(metrics_path, "w") as f:
-        json.dump(metrics, f, indent=4)
+        json.dump(metrics_dict, f, indent=4)
 
     print(f"{model_name}: F1-score = {f1:.4f}")
     return f1

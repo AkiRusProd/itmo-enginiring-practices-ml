@@ -1,11 +1,13 @@
 {
-    "AdaBoost": 0.7968266984924256,
-    "LogisticRegression": 0.8091929317716401,
-    "Bagging": 0.8091929317716401,
-    "SVC": 0.6071190540464283,
-    "DecisionTree": 0.7968266984924256,
-    "RandomForest": 0.8199351290861244,
-    "GradientBoosting": 0.8074907442165153,
     "best_model": "RandomForest",
-    "best_accuracy": 0.8199351290861244
+    "best_accuracy": 0.8199351290861244,
+    "models": {
+        "AdaBoost": 0.7968266984924256,
+        "LogisticRegression": 0.8091929317716401,
+        "Bagging": 0.8091929317716401,
+        "SVC": 0.6071190540464283,
+        "DecisionTree": 0.7968266984924256,
+        "RandomForest": 0.8199351290861244,
+        "GradientBoosting": 0.8074907442165153
+    }
 }

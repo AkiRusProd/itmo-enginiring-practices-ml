@@ -12,6 +12,7 @@ from sklearn.metrics import (
 )
 
 from config import DATA_PATH, FEATURES, METRICS_DIR, MODEL_DIR, TARGET
+from schemas import EvalMetrics
 
 # Загружаем лучшую модель
 best_model_path = f"{MODEL_DIR}/best_model.pkl"
@@ -25,14 +26,15 @@ y = df[TARGET]
 # Предсказания
 preds = model.predict(X)
 
-# Считаем несколько метрик
-eval_metrics = {
-    "accuracy": accuracy_score(y, preds),
-    "precision": precision_score(y, preds, average="weighted"),
-    "recall": recall_score(y, preds, average="weighted"),
-    "f1": f1_score(y, preds, average="weighted"),
-    "confusion_matrix": confusion_matrix(y, preds).tolist(),
-}
+# Считаем несколько метрик и валидируем через Pydantic
+eval_metrics_obj = EvalMetrics(
+    accuracy=accuracy_score(y, preds),
+    precision=precision_score(y, preds, average="weighted"),
+    recall=recall_score(y, preds, average="weighted"),
+    f1=f1_score(y, preds, average="weighted"),
+    confusion_matrix=confusion_matrix(y, preds).tolist(),
+)
+eval_metrics = eval_metrics_obj.model_dump(mode="json")
 
 # Создаем папку и сохраняем
 Path(METRICS_DIR).mkdir(parents=True, exist_ok=True)

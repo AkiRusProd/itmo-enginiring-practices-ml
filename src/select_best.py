@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 
 from config import METRICS_DIR, MODEL_DIR
+from schemas import BestModelMetrics, TrainMetrics
 
 
 def select_best_model():
@@ -13,11 +14,11 @@ def select_best_model():
 
     for file in metrics_files:
         with open(file, "r") as f:
-            metrics = json.load(f)
-            model_name = metrics.get("model")
-            acc = metrics.get("f1_score")
-            if model_name is None or acc is None:
-                continue
+            metrics_data = json.load(f)
+            # Validate using Pydantic schema
+            metrics = TrainMetrics(**metrics_data)
+            model_name = metrics.model
+            acc = metrics.f1_score
 
             all_metrics[model_name] = acc
 
@@ -25,12 +26,19 @@ def select_best_model():
                 best_acc = acc
                 best_model = model_name
 
+    # Create and validate final metrics using Pydantic schema
+    final_metrics = BestModelMetrics(
+        best_model=best_model,
+        best_accuracy=best_acc,
+        models=all_metrics,
+    )
+    metrics_dict = final_metrics.model_dump(mode="json")
+
     # Create final metrics file
     Path("metrics").mkdir(parents=True, exist_ok=True)
-    final_metrics = {**all_metrics, "best_model": best_model, "best_accuracy": best_acc}
 
     with open(f"{METRICS_DIR}/best_model_metrics.json", "w") as f:
-        json.dump(final_metrics, f, indent=4)
+        json.dump(metrics_dict, f, indent=4)
 
     print(f"Best model: {best_model} with accuracy: {best_acc:.4f}")
 
