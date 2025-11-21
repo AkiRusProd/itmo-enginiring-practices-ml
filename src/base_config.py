@@ -1,7 +1,3 @@
-"""Application configuration with Pydantic validation and composition support."""
-
-from pathlib import Path
-
 from sklearn.ensemble import (
     AdaBoostClassifier,
     BaggingClassifier,

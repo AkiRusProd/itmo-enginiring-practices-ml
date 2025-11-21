@@ -8,7 +8,7 @@ import pandas as pd
 from sklearn.metrics import f1_score
 from sklearn.model_selection import train_test_split
 
-from config import (
+from base_config import (
     DATA_PATH,
     FEATURES,
     LOG_DIR,

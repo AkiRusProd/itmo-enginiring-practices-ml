@@ -6,7 +6,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-from config import LOG_DIR, METRICS_FILE
+from base_config import LOG_DIR, METRICS_FILE
 
 
 class PipelineLogger:

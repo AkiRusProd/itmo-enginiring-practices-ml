@@ -5,7 +5,7 @@ from pathlib import Path
 
 from tensorboardX import SummaryWriter
 
-from config import TB_LOG_DIR
+from base_config import TB_LOG_DIR
 
 
 def save_model(model, path):

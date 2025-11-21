@@ -2,7 +2,7 @@ import glob
 import json
 from pathlib import Path
 
-from config import METRICS_DIR, MODEL_DIR
+from base_config import METRICS_DIR, MODEL_DIR
 from schemas import BestModelMetrics, TrainMetrics
 
 

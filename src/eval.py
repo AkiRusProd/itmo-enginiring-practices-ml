@@ -11,7 +11,7 @@ from sklearn.metrics import (
     recall_score,
 )
 
-from config import DATA_PATH, FEATURES, METRICS_DIR, MODEL_DIR, TARGET
+from base_config import DATA_PATH, FEATURES, METRICS_DIR, MODEL_DIR, TARGET
 from schemas import EvalMetrics
 
 # Загружаем лучшую модель
