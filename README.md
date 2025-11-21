@@ -22,6 +22,10 @@ Directory structure:
     ├── requirements.txt
     ├── .dvcignore
     ├── .pre-commit-config.yaml
+    ├── config/
+    │   ├── params.dev.yaml
+    │   ├── params.prod.yaml
+    │   └── params.test.yaml
     ├── data/
     │   └── raw/
     │       └── dataset.csv.dvc
@@ -32,10 +36,8 @@ Directory structure:
     │   └── docs/
     │       ├── getting-started.md
     │       └── index.md
-    ├── metrics/
-    │   └── metrics.json
-    ├── models/
-    │   └── .gitkeep
+    ├── examples/
+    │   └── config_composition_examples.py
     ├── notebooks/
     │   └── .gitkeep
     ├── references/
@@ -46,9 +48,15 @@ Directory structure:
     │       └── .gitkeep
     ├── src/
     │   ├── __init__.py
-    │   ├── config.py
+    │   ├── base_config.py
+    │   ├── config_manager.py
+    │   ├── eval.py
     │   ├── preprocess.py
+    │   ├── result_logger.py
+    │   ├── schemas.py
+    │   ├── select_best.py
     │   ├── train.py
+    │   ├── train_single.py
     │   └── utils.py
     ├── tests/
     │   └── test_data.py
