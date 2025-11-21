@@ -230,4 +230,4 @@ dvc_storage/
 logs/
 tb_logs/
 models/
-data/
+*.csv

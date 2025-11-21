@@ -123,24 +123,9 @@ CONFIG_PROFILE=prod dvc repro     # Продакшн
 - JSON метрики в `metrics/metrics.json`
 - Красивый вывод лучшей модели и всех результатов
 
-```bash
-# Вывод результатов
-python src/demo_integration.py
-```
-
 ### 3.4 Протестировать воспроизводимость
-✓ Тесты в `tests/test_reproducibility.py`:
-
-```bash
-python tests/test_reproducibility.py
-# Результат: ВСЕ ТЕСТЫ ПРОЙДЕНЫ ✓
-```
-
-**Гарантии воспроизводимости:**
-- SEED = 42 для всех операций
-- DVC кеш обеспечивает идентичные результаты
-- train_test_split с random_state=SEED
-- Все модели инициализируются одинаково
+Воспроизводимость поддержана
+![alt text](images/test_repro.png)
 
 ## 4. Отчет о проделанной работе (1 балл)
 
