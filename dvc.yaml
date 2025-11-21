@@ -14,7 +14,7 @@ stages:
       deps:
         - data/processed/processed.csv
         - src/train_single.py
-        - src/config.py
+        - src/base_config.py
         - src/utils.py
       params:
         - train

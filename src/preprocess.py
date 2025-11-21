@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 
-from config import DATA_PATH, RAW_DATA_PATH, SEED
+from base_config import DATA_PATH, RAW_DATA_PATH, SEED
 
 np.random.seed(SEED)
 random.seed(SEED)

@@ -24,5 +24,6 @@ repos:
     rev: 1.7.5
     hooks:
       - id: bandit
+        args: ["-s", "B101"]
         additional_dependencies: [ "pbr", "types-PyYAML" ]
 

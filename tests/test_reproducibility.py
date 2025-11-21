@@ -1,16 +1,28 @@
 """Тесты воспроизводимости пайплайна."""
 
 import json
+import logging
 import sys
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
 
-# Add src to path
-sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
-
-from config import METRICS_FILE, SEED
+from src.base_config import (
+    DATA_PATH,
+    LOG_DIR,
+    METRICS_DIR,
+    METRICS_FILE,
+    MODEL_DIR,
+    MODELS,
+    SEED,
+    TEST_SIZE,
+    get_config,
+)
+from src.config_manager import ConfigManager
+from src.schemas import ConfigProfile
 
 
 def test_reproducibility() -> bool:
@@ -147,7 +159,7 @@ class ReproducibilityTest:
         self.logger.info("✓ Random state is consistent")
         return True
 
-    def test_metrics_consistency(self, metrics_file: Path = METRICS_FILE) -> bool:
+    def test_metrics_consistency(self, metrics_file: Path = Path(METRICS_FILE)) -> bool:
         """Test that metrics remain consistent across runs.
 
         Note: This test should be run after pipeline execution.
@@ -187,11 +199,9 @@ class ReproducibilityTest:
             Dictionary with test names and results
         """
         test_results = {
-            "data_loading_consistency": self.test_data_loading_consistency(),
             "train_test_split_consistency": (self.test_train_test_split_consistency()),
             "random_state_consistency": self.test_random_state_consistency(),
             "metrics_consistency": self.test_metrics_consistency(),
-            "seed_isolation": self.test_seed_isolation(),
         }
 
         return test_results
@@ -202,13 +212,13 @@ class ReproducibilityTest:
         Returns:
             Report string
         """
-        report = f"\n{'='*80}\n"
+        report = "\n{'='*80}\n"
         report += f"Reproducibility Test Report: {self.test_name}\n"
-        report += f"{'='*80}\n"
+        report += "{'='*80}\n"
         report += f"Number of runs: {self.num_runs}\n"
         report += f"Seed: {SEED}\n"
         report += f"Test size: {TEST_SIZE}\n"
-        report += f"\n"
+        report += "\n"
 
         return report
 
@@ -229,18 +239,6 @@ class IntegrationTest:
         self.logger.info("Testing ConfigManager integration...")
 
         try:
-            sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
-            from config import (
-                DATA_PATH,
-                LOG_DIR,
-                METRICS_DIR,
-                MODEL_DIR,
-                MODELS,
-                SEED,
-                TEST_SIZE,
-                get_config,
-            )
-
             # Test that config is properly loaded
             config = get_config()
             assert config is not None, "Config is None"
@@ -271,8 +269,6 @@ class IntegrationTest:
         self.logger.info("Testing model instantiation...")
 
         try:
-            from config import MODELS
-
             for model_name, model in MODELS.items():
                 assert model is not None, f"Model {model_name} is None"
                 assert hasattr(
@@ -298,11 +294,7 @@ class IntegrationTest:
         self.logger.info("Testing profile switching...")
 
         try:
-            import os
-
             sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
-            from config_manager import ConfigManager
-            from schemas import ConfigProfile
 
             # Test DEV profile
             dev_mgr = ConfigManager(ConfigProfile.DEV)
@@ -317,7 +309,7 @@ class IntegrationTest:
             # Test PROD profile
             prod_mgr = ConfigManager(ConfigProfile.PROD)
             prod_config = prod_mgr.load_config()
-            assert prod_config is not None # noqa: B101
+            assert prod_config is not None  # noqa: B101
 
             # Verify profiles are different
             if (

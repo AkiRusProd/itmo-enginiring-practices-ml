@@ -178,15 +178,9 @@ class ConfigManager:
         return config
 
     def to_dict(self) -> dict:
-        """Export configuration as dictionary."""
-        if self._config is None:
-            self.load_config()
-        return self._config.model_dump(mode="json")
+        return self.get_config().model_dump(mode="json")
 
     def to_yaml(self) -> str:
-        """Export configuration as YAML string."""
-        if self._config is None:
-            self.load_config()
         return yaml.dump(self.to_dict(), default_flow_style=False)
 
 
