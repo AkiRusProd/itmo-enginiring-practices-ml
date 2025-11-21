@@ -5,6 +5,8 @@ from pathlib import Path
 
 from tensorboardX import SummaryWriter
 
+from config import TB_LOG_DIR
+
 
 def save_model(model, path):
     Path(path).parent.mkdir(parents=True, exist_ok=True)
@@ -18,7 +20,7 @@ def load_model(path):
 
 
 @contextmanager
-def experiment(exp_name, log_dir="logs"):
+def experiment(exp_name, log_dir=TB_LOG_DIR):
     writer = SummaryWriter(log_dir=f"{log_dir}/{exp_name}")
     try:
         yield writer

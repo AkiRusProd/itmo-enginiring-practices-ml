@@ -1,9 +1,18 @@
 """Pydantic schemas for configuration and metrics validation."""
 
 from datetime import datetime
+from enum import Enum
 from typing import Any, Dict, Optional
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
+
+
+class ConfigProfile(str, Enum):
+    """Configuration profiles for different environments."""
+
+    DEV = "dev"
+    TEST = "test"
+    PROD = "prod"
 
 
 class TrainConfig(BaseModel):
@@ -25,35 +34,27 @@ class ModelConfig(BaseModel):
 
     model_class: str = Field(..., description="Model class name")
 
-    class Config:
-        extra = "allow"  # Allow additional fields for model-specific parameters
+    model_config = ConfigDict(extra="allow")
 
 
 class ModelsConfig(BaseModel):
     """Container for all model configurations."""
 
-    LogisticRegression: Optional[Dict[str, Any]] = None
-    RandomForest: Optional[Dict[str, Any]] = None
-    GradientBoosting: Optional[Dict[str, Any]] = None
-    SVC: Optional[Dict[str, Any]] = None
-    DecisionTree: Optional[Dict[str, Any]] = None
-    AdaBoost: Optional[Dict[str, Any]] = None
-    Bagging: Optional[Dict[str, Any]] = None
-    KNeighbors: Optional[Dict[str, Any]] = None
-    LinearSVC: Optional[Dict[str, Any]] = None
-    GaussianNB: Optional[Dict[str, Any]] = None
-    MultinomialNB: Optional[Dict[str, Any]] = None
-    BernoulliNB: Optional[Dict[str, Any]] = None
-    ExtraTrees: Optional[Dict[str, Any]] = None
-    RidgeClassifier: Optional[Dict[str, Any]] = None
+    model_config = ConfigDict(extra="allow")
 
-    class Config:
-        extra = "allow"
+    def merge(self, other: "ModelsConfig") -> "ModelsConfig":
+        """Merge with another ModelsConfig, with other taking precedence."""
+        merged_data = self.model_dump(exclude_none=True)
+        merged_data.update(other.model_dump(exclude_none=True))
+        return ModelsConfig(**merged_data)
 
 
 class AppConfig(BaseModel):
     """Application configuration."""
 
+    profile: ConfigProfile = Field(
+        ConfigProfile.DEV, description="Configuration profile (dev/test/prod)"
+    )
     train: TrainConfig
     models: ModelsConfig
     seed: int = Field(42, description="Random seed")
@@ -64,6 +65,7 @@ class AppConfig(BaseModel):
     )
     model_dir: str = Field("models", description="Directory for models")
     log_dir: str = Field("logs", description="Directory for logs")
+    tb_log_dir: str = Field("tb_logs", description="Directory for TensorBoard logs")
     metrics_dir: str = Field("metrics", description="Directory for metrics")
     features: list[str] = Field(
         default_factory=lambda: [
@@ -79,8 +81,28 @@ class AppConfig(BaseModel):
     )
     target: str = Field("Survived", description="Target column")
 
-    class Config:
-        extra = "allow"
+    model_config = ConfigDict(extra="allow")
+
+    def merge(self, other: "AppConfig") -> "AppConfig":
+        """Merge with another AppConfig, with other taking precedence."""
+        merged_data = self.model_dump()
+        other_data = other.model_dump()
+
+        # Deep merge for nested structures
+        for key, value in other_data.items():
+            if key in ["train", "models"] and isinstance(value, dict):
+                if key == "models":
+                    # Merge models using ModelsConfig merge
+                    base_models = ModelsConfig(**merged_data.get(key, {}))
+                    other_models = ModelsConfig(**value)
+                    merged_data[key] = base_models.merge(other_models).model_dump()
+                else:
+                    # Merge train config
+                    merged_data[key] = {**merged_data.get(key, {}), **value}
+            else:
+                merged_data[key] = value
+
+        return AppConfig(**merged_data)
 
 
 class TrainMetrics(BaseModel):
@@ -90,6 +112,9 @@ class TrainMetrics(BaseModel):
     f1_score: float = Field(..., description="F1 score")
     timestamp: datetime = Field(
         default_factory=datetime.now, description="Training timestamp"
+    )
+    profile: Optional[ConfigProfile] = Field(
+        default=None, description="Profile used for training"
     )
 
 
@@ -107,7 +132,7 @@ class BestModelMetrics(BaseModel):
     """Best model selection metrics."""
 
     best_model: str = Field(..., description="Best model name")
-    best_accuracy: float = Field(..., description="Best model accuracy")
+    best_f1_score: float = Field(..., description="Best model f1 score")
     models: Dict[str, float] = Field(
         default_factory=dict, description="All models metrics"
     )

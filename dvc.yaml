@@ -10,7 +10,7 @@ stages:
   train_models:
     foreach: ${models}
     do:
-      cmd: python src/train_single.py --model ${key}
+      cmd: CONFIG_PROFILE=test python src/train_single.py --model ${key}
       deps:
         - data/processed/processed.csv
         - src/train_single.py

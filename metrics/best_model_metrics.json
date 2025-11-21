@@ -1,13 +1,13 @@
 {
-    "best_model": "RandomForest",
-    "best_accuracy": 0.8199351290861244,
+    "best_model": "GradientBoosting",
+    "best_f1_score": 0.8088875682100598,
     "models": {
-        "AdaBoost": 0.7968266984924256,
-        "LogisticRegression": 0.8091929317716401,
-        "Bagging": 0.8091929317716401,
-        "SVC": 0.6071190540464283,
-        "DecisionTree": 0.7968266984924256,
-        "RandomForest": 0.8199351290861244,
-        "GradientBoosting": 0.8074907442165153
+        "AdaBoost": 0.8051730293384642,
+        "LogisticRegression": 0.8061541955629411,
+        "Bagging": 0.7940924808283788,
+        "SVC": 0.6139535148911422,
+        "DecisionTree": 0.761869450662899,
+        "RandomForest": 0.7851399799948301,
+        "GradientBoosting": 0.8088875682100598
     }
 }

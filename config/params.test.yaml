@@ -1,0 +1,28 @@
+# Test profile configuration
+# Overrides base params.yaml for test environment
+
+train:
+  seed: 42
+  test_size: 0.25
+
+models:
+  LogisticRegression:
+    max_iter: 150
+  RandomForest:
+    n_estimators: 50
+    random_state: 42
+  GradientBoosting:
+    n_estimators: 50
+    random_state: 42
+  SVC:
+    kernel: 'rbf'
+    C: 1.0
+  DecisionTree:
+    max_depth: 8
+    random_state: 42
+  AdaBoost:
+    n_estimators: 30
+    random_state: 42
+  Bagging:
+    n_estimators: 30
+    random_state: 42

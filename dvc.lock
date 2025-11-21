@@ -16,174 +16,9 @@ stages:
       hash: md5
       md5: 3faebfde8e1f49ca1a127d6908e25c3a
       size: 59411
-  train_model:
-    cmd: python src/train.py
-    deps:
-    - path: data/processed/processed.csv
-      hash: md5
-      md5: 3faebfde8e1f49ca1a127d6908e25c3a
-      size: 59411
-    - path: src/config.py
-      hash: md5
-      md5: 5dc322902121a6e796c89a8325313319
-      size: 1651
-    - path: src/preprocess.py
-      hash: md5
-      md5: 52eecbac7f709e57545dbc954f2aa11c
-      size: 878
-    - path: src/train.py
-      hash: md5
-      md5: 31883b6cc32c8d0f99d85bdd0a0d0324
-      size: 1772
-    - path: src/utils.py
-      hash: md5
-      md5: 7e441c1aa5b4d9aab431e42f065c1a0f
-      size: 963
-    params:
-      params.yaml:
-        train.seed: 42
-        train.test_size: 0.2
-    outs:
-    - path: metrics/metrics.json
-      hash: md5
-      md5: 8e93e1786b6360dbacb39a1749c41739
-      size: 662
-    - path: models/AdaBoost.pkl
-      hash: md5
-      md5: 96b0f31dd98f6a7fc09c525254689991
-      size: 56790
-    - path: models/Bagging.pkl
-      hash: md5
-      md5: 78ff23f547b2eb62082b553e74823a73
-      size: 1843520
-    - path: models/BernoulliNB.pkl
-      hash: md5
-      md5: 5f7283d9d19c6e9c9f55d81eeab1df38
-      size: 974
-    - path: models/DecisionTree.pkl
-      hash: md5
-      md5: f41200c2ba7505434433650aa217c4f9
-      size: 29526
-    - path: models/ExtraTrees.pkl
-      hash: md5
-      md5: 65e43595188e0f94f4f7ab5f25c39549
-      size: 5365165
-    - path: models/GaussianNB.pkl
-      hash: md5
-      md5: 1fb9b43949bcb97ddd50c0b70efa53e9
-      size: 944
-    - path: models/GradientBoosting.pkl
-      hash: md5
-      md5: dbfaefc1601dd801f76c94a70255658a
-      size: 130910
-    - path: models/KNeighbors.pkl
-      hash: md5
-      md5: e89acf69fb9e04807a595fa6ca4d486c
-      size: 57022
-    - path: models/LinearSVC.pkl
-      hash: md5
-      md5: dfa6ba11b22d171a7b805c5d26277c5d
-      size: 798
-    - path: models/LogisticRegression.pkl
-      hash: md5
-      md5: 0c1ce536f12bceaf4bc182587d00425d
-      size: 913
-    - path: models/MultinomialNB.pkl
-      hash: md5
-      md5: bd4c11d6a2228e6ed6fa887d280ee627
-      size: 956
-    - path: models/RandomForest.pkl
-      hash: md5
-      md5: f459985bcb2c642fd67ebb2071330db4
-      size: 2440796
-    - path: models/RidgeClassifier.pkl
-      hash: md5
-      md5: feca6146bbb0e57089ef2fbff75738f4
-      size: 928
-    - path: models/SVC_linear.pkl
-      hash: md5
-      md5: fb6171307ddc46cc5ca45ef850741715
-      size: 25486
-    - path: models/SVC_rbf.pkl
-      hash: md5
-      md5: aeb5f8c39a3705ec96a13e8ce574ade9
-      size: 38403
-  train_models:
-    cmd: python src/train.py
-    deps:
-    - path: data/processed/processed.csv
-      hash: md5
-      md5: 3faebfde8e1f49ca1a127d6908e25c3a
-      size: 59411
-    - path: src/config.py
-      hash: md5
-      md5: 22cb21f211d5063b892c1816ea6733db
-      size: 2096
-    - path: src/preprocess.py
-      hash: md5
-      md5: 52eecbac7f709e57545dbc954f2aa11c
-      size: 878
-    - path: src/train.py
-      hash: md5
-      md5: 0698a4f448d3d537f3a14e2049e62522
-      size: 2036
-    - path: src/utils.py
-      hash: md5
-      md5: 7e441c1aa5b4d9aab431e42f065c1a0f
-      size: 963
-    params:
-      params.yaml:
-        models:
-          LogisticRegression:
-            max_iter: 200
-          RandomForest:
-            n_estimators: 100
-          GradientBoosting:
-            n_estimators: 100
-          SVC:
-            kernel: rbf
-            C: 1.0
-          DecisionTree:
-            max_depth: 10
-          AdaBoost:
-            n_estimators: 50
-          Bagging:
-            n_estimators: 50
-        train:
-          seed: 42
-          test_size: 0.2
-    outs:
-    - path: metrics/metrics.json
-      hash: md5
-      md5: 2e5d762c1202cee7f56d6b0ffa25409a
-      size: 621
-    - path: models
-      hash: md5
-      md5: 296fe525110f659a5f38ed8354764945.dir
-      size: 11442035
-      nfiles: 15
-  evaluate:
-    cmd: python src/eval.py
-    deps:
-    - path: data/processed/processed.csv
-      hash: md5
-      md5: 3faebfde8e1f49ca1a127d6908e25c3a
-      size: 59411
-    - path: models/best_model.pkl
-      hash: md5
-      md5: f459985bcb2c642fd67ebb2071330db4
-      size: 2440796
-    - path: src/eval.py
-      hash: md5
-      md5: d0fe917d4f2ab7aad598f283a47841c2
-      size: 1368
-    outs:
-    - path: metrics/best_model_advanced_metrics.json
-      hash: md5
-      md5: 041b1ba1785112cd0bdc380beee9390e
-      size: 277
   train_models@LogisticRegression:
-    cmd: python src/train_single.py --model LogisticRegression
+    cmd: CONFIG_PROFILE=test python src/train_single.py --model 
+      LogisticRegression
     deps:
     - path: data/processed/processed.csv
       hash: md5
@@ -191,16 +26,16 @@ stages:
       size: 59411
     - path: src/config.py
       hash: md5
-      md5: 68564f0917b17d425bf63ac337f13155
-      size: 2509
+      md5: 17a53769bdb2c68edf9392e9e4e823e0
+      size: 2306
     - path: src/train_single.py
       hash: md5
-      md5: 2fa92ab739f2e517e0dfb086f25e0af7
-      size: 2250
+      md5: 78e03695fc60d1356f3297c831e71122
+      size: 3766
     - path: src/utils.py
       hash: md5
-      md5: 7e441c1aa5b4d9aab431e42f065c1a0f
-      size: 963
+      md5: 82b79fa9995271600a80b3ade65bc9bf
+      size: 996
     params:
       params.yaml:
         models:
@@ -225,14 +60,14 @@ stages:
     outs:
     - path: metrics/train_models/LogisticRegression_metrics.json
       hash: md5
-      md5: b1fc382200007ab187756ce2a8573274
-      size: 120
+      md5: 300014d70d865549c420e1729a80a612
+      size: 143
     - path: models/LogisticRegression.pkl
       hash: md5
-      md5: 0c1ce536f12bceaf4bc182587d00425d
+      md5: a3cb04ba213a3416982b582c4b722a1f
       size: 913
   train_models@RandomForest:
-    cmd: python src/train_single.py --model RandomForest
+    cmd: CONFIG_PROFILE=test python src/train_single.py --model RandomForest
     deps:
     - path: data/processed/processed.csv
       hash: md5
@@ -240,16 +75,16 @@ stages:
       size: 59411
     - path: src/config.py
       hash: md5
-      md5: 68564f0917b17d425bf63ac337f13155
-      size: 2509
+      md5: 17a53769bdb2c68edf9392e9e4e823e0
+      size: 2306
     - path: src/train_single.py
       hash: md5
-      md5: 2fa92ab739f2e517e0dfb086f25e0af7
-      size: 2250
+      md5: 78e03695fc60d1356f3297c831e71122
+      size: 3766
     - path: src/utils.py
       hash: md5
-      md5: 7e441c1aa5b4d9aab431e42f065c1a0f
-      size: 963
+      md5: 82b79fa9995271600a80b3ade65bc9bf
+      size: 996
     params:
       params.yaml:
         models:
@@ -274,14 +109,14 @@ stages:
     outs:
     - path: metrics/train_models/RandomForest_metrics.json
       hash: md5
-      md5: bb1de53c0188b66db68428ffb1a3b8b2
-      size: 114
+      md5: eb1132fbf70314529fd545eacf1e0e7b
+      size: 137
     - path: models/RandomForest.pkl
       hash: md5
-      md5: f459985bcb2c642fd67ebb2071330db4
-      size: 2440796
+      md5: 1c1363dd58e9e2db7bf591fd9865ee05
+      size: 1113904
   train_models@GradientBoosting:
-    cmd: python src/train_single.py --model GradientBoosting
+    cmd: CONFIG_PROFILE=test python src/train_single.py --model GradientBoosting
     deps:
     - path: data/processed/processed.csv
       hash: md5
@@ -289,16 +124,16 @@ stages:
       size: 59411
     - path: src/config.py
       hash: md5
-      md5: 68564f0917b17d425bf63ac337f13155
-      size: 2509
+      md5: 17a53769bdb2c68edf9392e9e4e823e0
+      size: 2306
     - path: src/train_single.py
       hash: md5
-      md5: 2fa92ab739f2e517e0dfb086f25e0af7
-      size: 2250
+      md5: 78e03695fc60d1356f3297c831e71122
+      size: 3766
     - path: src/utils.py
       hash: md5
-      md5: 7e441c1aa5b4d9aab431e42f065c1a0f
-      size: 963
+      md5: 82b79fa9995271600a80b3ade65bc9bf
+      size: 996
     params:
       params.yaml:
         models:
@@ -323,63 +158,14 @@ stages:
     outs:
     - path: metrics/train_models/GradientBoosting_metrics.json
       hash: md5
-      md5: 36ac8eb36f60e37e39e7b5e394419304
-      size: 118
+      md5: 35d705eb32dfd9b867b8e3fcfc308c7e
+      size: 141
     - path: models/GradientBoosting.pkl
       hash: md5
-      md5: 76b5042afe2fceb2ca5008345454ca16
-      size: 130910
-  train_models@DecisionTree:
-    cmd: python src/train_single.py --model DecisionTree
-    deps:
-    - path: data/processed/processed.csv
-      hash: md5
-      md5: 3faebfde8e1f49ca1a127d6908e25c3a
-      size: 59411
-    - path: src/config.py
-      hash: md5
-      md5: 68564f0917b17d425bf63ac337f13155
-      size: 2509
-    - path: src/train_single.py
-      hash: md5
-      md5: 2fa92ab739f2e517e0dfb086f25e0af7
-      size: 2250
-    - path: src/utils.py
-      hash: md5
-      md5: 7e441c1aa5b4d9aab431e42f065c1a0f
-      size: 963
-    params:
-      params.yaml:
-        models:
-          LogisticRegression:
-            max_iter: 200
-          RandomForest:
-            n_estimators: 100
-          GradientBoosting:
-            n_estimators: 100
-          SVC:
-            kernel: rbf
-            C: 1.0
-          DecisionTree:
-            max_depth: 10
-          AdaBoost:
-            n_estimators: 50
-          Bagging:
-            n_estimators: 50
-        train:
-          seed: 42
-          test_size: 0.2
-    outs:
-    - path: metrics/train_models/DecisionTree_metrics.json
-      hash: md5
-      md5: 8c4cbc7d4f5e6891523e8c69a9fbd000
-      size: 114
-    - path: models/DecisionTree.pkl
-      hash: md5
-      md5: cd8b5d5566dfc660f62d2074bfb8116c
-      size: 14484
+      md5: 7f01b6a23619e933e005362b92889b32
+      size: 70389
   train_models@SVC:
-    cmd: python src/train_single.py --model SVC
+    cmd: CONFIG_PROFILE=test python src/train_single.py --model SVC
     deps:
     - path: data/processed/processed.csv
       hash: md5
@@ -387,16 +173,16 @@ stages:
       size: 59411
     - path: src/config.py
       hash: md5
-      md5: 68564f0917b17d425bf63ac337f13155
-      size: 2509
+      md5: 17a53769bdb2c68edf9392e9e4e823e0
+      size: 2306
     - path: src/train_single.py
       hash: md5
-      md5: 2fa92ab739f2e517e0dfb086f25e0af7
-      size: 2250
+      md5: 78e03695fc60d1356f3297c831e71122
+      size: 3766
     - path: src/utils.py
       hash: md5
-      md5: 7e441c1aa5b4d9aab431e42f065c1a0f
-      size: 963
+      md5: 82b79fa9995271600a80b3ade65bc9bf
+      size: 996
     params:
       params.yaml:
         models:
@@ -421,14 +207,14 @@ stages:
     outs:
     - path: metrics/train_models/SVC_metrics.json
       hash: md5
-      md5: 905189e715c3370f711867da54748bd1
-      size: 105
+      md5: 17037b0d603636313a8c8cfa069a6506
+      size: 128
     - path: models/SVC.pkl
       hash: md5
-      md5: 64b4375e70815068bc1ed16fca25fd64
-      size: 38386
-  train_models@AdaBoost:
-    cmd: python src/train_single.py --model AdaBoost
+      md5: 1c8a2405caf986c11768aec0d4e86702
+      size: 36486
+  train_models@DecisionTree:
+    cmd: CONFIG_PROFILE=test python src/train_single.py --model DecisionTree
     deps:
     - path: data/processed/processed.csv
       hash: md5
@@ -436,16 +222,65 @@ stages:
       size: 59411
     - path: src/config.py
       hash: md5
-      md5: 68564f0917b17d425bf63ac337f13155
-      size: 2509
+      md5: 17a53769bdb2c68edf9392e9e4e823e0
+      size: 2306
     - path: src/train_single.py
       hash: md5
-      md5: 2fa92ab739f2e517e0dfb086f25e0af7
-      size: 2250
+      md5: 78e03695fc60d1356f3297c831e71122
+      size: 3766
     - path: src/utils.py
       hash: md5
-      md5: 7e441c1aa5b4d9aab431e42f065c1a0f
-      size: 963
+      md5: 82b79fa9995271600a80b3ade65bc9bf
+      size: 996
+    params:
+      params.yaml:
+        models:
+          LogisticRegression:
+            max_iter: 200
+          RandomForest:
+            n_estimators: 100
+          GradientBoosting:
+            n_estimators: 100
+          SVC:
+            kernel: rbf
+            C: 1.0
+          DecisionTree:
+            max_depth: 10
+          AdaBoost:
+            n_estimators: 50
+          Bagging:
+            n_estimators: 50
+        train:
+          seed: 42
+          test_size: 0.2
+    outs:
+    - path: metrics/train_models/DecisionTree_metrics.json
+      hash: md5
+      md5: 0b045ac938378f804ebed6930bf7e515
+      size: 136
+    - path: models/DecisionTree.pkl
+      hash: md5
+      md5: 897c380274fc5b1f422c077951e3460a
+      size: 9845
+  train_models@AdaBoost:
+    cmd: CONFIG_PROFILE=test python src/train_single.py --model AdaBoost
+    deps:
+    - path: data/processed/processed.csv
+      hash: md5
+      md5: 3faebfde8e1f49ca1a127d6908e25c3a
+      size: 59411
+    - path: src/config.py
+      hash: md5
+      md5: 17a53769bdb2c68edf9392e9e4e823e0
+      size: 2306
+    - path: src/train_single.py
+      hash: md5
+      md5: 78e03695fc60d1356f3297c831e71122
+      size: 3766
+    - path: src/utils.py
+      hash: md5
+      md5: 82b79fa9995271600a80b3ade65bc9bf
+      size: 996
     params:
       params.yaml:
         models:
@@ -470,14 +305,14 @@ stages:
     outs:
     - path: metrics/train_models/AdaBoost_metrics.json
       hash: md5
-      md5: d89bb9bc6d481d1a86045420455ae377
-      size: 110
+      md5: 16ce83716d555474eedeb1cdefed157f
+      size: 133
     - path: models/AdaBoost.pkl
       hash: md5
-      md5: 6b8891dba91a987c9c81b1932e709ff9
-      size: 29090
+      md5: 106136143cec966cd9448692f1cada6d
+      size: 18005
   train_models@Bagging:
-    cmd: python src/train_single.py --model Bagging
+    cmd: CONFIG_PROFILE=test python src/train_single.py --model Bagging
     deps:
     - path: data/processed/processed.csv
       hash: md5
@@ -485,16 +320,16 @@ stages:
       size: 59411
     - path: src/config.py
       hash: md5
-      md5: 68564f0917b17d425bf63ac337f13155
-      size: 2509
+      md5: 17a53769bdb2c68edf9392e9e4e823e0
+      size: 2306
     - path: src/train_single.py
       hash: md5
-      md5: 2fa92ab739f2e517e0dfb086f25e0af7
-      size: 2250
+      md5: 78e03695fc60d1356f3297c831e71122
+      size: 3766
     - path: src/utils.py
       hash: md5
-      md5: 7e441c1aa5b4d9aab431e42f065c1a0f
-      size: 963
+      md5: 82b79fa9995271600a80b3ade65bc9bf
+      size: 996
     params:
       params.yaml:
         models:
@@ -519,30 +354,50 @@ stages:
     outs:
     - path: metrics/train_models/Bagging_metrics.json
       hash: md5
-      md5: 5a4c814b083d7f8f30794af9542b545a
-      size: 109
+      md5: 698482347a7d4836c9bafbc92cb996f5
+      size: 132
     - path: models/Bagging.pkl
       hash: md5
-      md5: ff83cd901c91253503f5eb95ab020791
-      size: 912830
+      md5: 5a29319d036232772b9adc2994538781
+      size: 497957
   select_best:
     cmd: python src/select_best.py
     deps:
     - path: metrics/train_models
       hash: md5
-      md5: 619ca13d61b176016d163b483c468e81.dir
-      size: 790
+      md5: d41968b93c435e84e53ec0d93c18f478.dir
+      size: 950
       nfiles: 7
     - path: src/select_best.py
       hash: md5
-      md5: ccb958c353f2ab7c6d207f20a2b291f3
+      md5: 144a68eed0461c9cba03841efaab2c30
       size: 1500
     outs:
     - path: metrics/best_model_metrics.json
       hash: md5
-      md5: 72afc3d2e9b58b52dae477d0b64244aa
-      size: 399
+      md5: 43a371e16b904270a9a22a49c002cde9
+      size: 402
     - path: models/best_model.pkl
       hash: md5
-      md5: f459985bcb2c642fd67ebb2071330db4
-      size: 2440796
+      md5: 7f01b6a23619e933e005362b92889b32
+      size: 70389
+  evaluate:
+    cmd: python src/eval.py
+    deps:
+    - path: data/processed/processed.csv
+      hash: md5
+      md5: 3faebfde8e1f49ca1a127d6908e25c3a
+      size: 59411
+    - path: models/best_model.pkl
+      hash: md5
+      md5: 7f01b6a23619e933e005362b92889b32
+      size: 70389
+    - path: src/eval.py
+      hash: md5
+      md5: d0fe917d4f2ab7aad598f283a47841c2
+      size: 1368
+    outs:
+    - path: metrics/best_model_advanced_metrics.json
+      hash: md5
+      md5: eb6bf5b8668109fddb5c71baf85424ff
+      size: 277

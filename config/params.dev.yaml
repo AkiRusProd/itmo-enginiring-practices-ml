@@ -1,0 +1,22 @@
+# Development profile configuration
+# Overrides base params.yaml for development environment
+
+train:
+  seed: 42
+  test_size: 0.3  # Larger test set for development
+
+models:
+  LogisticRegression:
+    max_iter: 100  # Lower iterations for faster dev training
+  RandomForest:
+    n_estimators: 10  # Fewer trees for faster training
+    random_state: 42
+  GradientBoosting:
+    n_estimators: 10  # Fewer trees
+    random_state: 42
+  SVC:
+    kernel: 'linear'  # Faster kernel for dev
+    C: 1.0
+  DecisionTree:
+    max_depth: 5  # Shallower tree for faster training
+    random_state: 42

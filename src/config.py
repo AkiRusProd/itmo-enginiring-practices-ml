@@ -1,8 +1,7 @@
-"""Application configuration with Pydantic validation."""
+"""Application configuration with Pydantic validation and composition support."""
 
 from pathlib import Path
 
-import yaml
 from sklearn.ensemble import (
     AdaBoostClassifier,
     BaggingClassifier,
@@ -16,7 +15,8 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC, LinearSVC
 from sklearn.tree import DecisionTreeClassifier
 
-from schemas import AppConfig, ModelsConfig, TrainConfig
+from config_manager import get_config_manager, initialize_config
+from schemas import AppConfig
 
 MODEL_CLASSES = {
     "LogisticRegression": LogisticRegression,
@@ -36,25 +36,8 @@ MODEL_CLASSES = {
 }
 
 
-def _load_config() -> AppConfig:
-    """Load and validate configuration from params.yaml using Pydantic."""
-    params_path = Path("params.yaml")
-    if not params_path.exists():
-        raise FileNotFoundError(f"Configuration file not found: {params_path}")
-
-    with open(params_path, "r") as f:
-        params = yaml.safe_load(f)
-
-    # Validate using Pydantic
-    config = AppConfig(
-        train=TrainConfig(**params.get("train", {})),
-        models=ModelsConfig(**params.get("models", {})),
-    )
-    return config
-
-
-# Load and validate configuration
-_config = _load_config()
+# Initialize configuration using ConfigManager
+_config = initialize_config()
 
 # Export configuration values
 SEED = _config.train.seed
@@ -64,8 +47,10 @@ RAW_DATA_PATH = _config.raw_data_path
 DATA_PATH = _config.data_path
 MODEL_DIR = _config.model_dir
 LOG_DIR = _config.log_dir
+TB_LOG_DIR = _config.tb_log_dir
 METRICS_DIR = _config.metrics_dir
 METRICS_FILE = f"{METRICS_DIR}/metrics.json"
+PROFILE = _config.profile
 
 FEATURES = _config.features
 TARGET = _config.target
@@ -82,4 +67,11 @@ MODELS = {
 # For testing and direct access
 def get_config() -> AppConfig:
     """Get the validated configuration object."""
+    return get_config_manager().get_config()
+
+
+def reload_config() -> AppConfig:
+    """Reload configuration from files."""
+    global _config
+    _config = get_config_manager().load_config()
     return _config

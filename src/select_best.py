@@ -29,7 +29,7 @@ def select_best_model():
     # Create and validate final metrics using Pydantic schema
     final_metrics = BestModelMetrics(
         best_model=best_model,
-        best_accuracy=best_acc,
+        best_f1_score=best_acc,
         models=all_metrics,
     )
     metrics_dict = final_metrics.model_dump(mode="json")
@@ -40,7 +40,7 @@ def select_best_model():
     with open(f"{METRICS_DIR}/best_model_metrics.json", "w") as f:
         json.dump(metrics_dict, f, indent=4)
 
-    print(f"Best model: {best_model} with accuracy: {best_acc:.4f}")
+    print(f"Best model: {best_model} with f1 score: {best_acc:.4f}")
 
     # Optionally, copy best model to a separate file
     if best_model:
