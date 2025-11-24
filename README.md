@@ -65,7 +65,83 @@ Directory structure:
 ```
 
 
-# Отчет по автоматизации пайплайнов (ДЗ4)
+# Отчет по ClearML для MLOps (ДЗ5)
+
+## 1.	Настройка ClearML (3 балла):
+### 1.1 Установить и настроить ClearML Server
+Установка и настройка:
+
+1. Установку и запуск выполним через docker-compose:
+    https://github.com/clearml/clearml-server/blob/master/docker/docker-compose.yml
+
+2. Выдаем права на директорию для работы elastic-search.
+    ```
+    sudo chown -R 1000:1000 /opt/clearml/data/elastic_7
+    sudo chmod -R 775 /opt/clearml/data/elastic_7
+    ```
+
+3. Запускаем контейнеры.
+    ```
+    docker compose -f docker-compose.clearml.yml up --build -d
+    ```
+4. Переходим по `http://localhost:8080`. После этого сервис должен запуститься:
+    ![alt text](images/clearml_start.png)
+
+5. Далее "Settings" -> "Workspace" -> "Create new credentials" (или просто http://localhost:8080/settings/workspace-configuration).
+
+6. Не забываем поставить clearml в poetry: `poetry add clearml`
+
+7. Далее создаем файл `.env` в корне проекта (Пример: [.env.example](.env.example)).
+
+
+8. (Необязательный шаг, если не хотите использовать .env) Далее в cli с проектом пишем clearml-init. В директории юзера должен появиться `clearml.conf`
+/home/rustam/clearml.conf
+
+9. Перезапускаем контейнеры:
+    ```
+    docker compose -f docker-compose.clearml.yml down
+    docker compose -f docker-compose.clearml.yml up -d
+    ```
+
+10. Дополнительно можно проверить, что все работает по адресу http://localhost:8008/debug.ping. Должны получить `result_msg	"OK"`.
+
+
+
+### 1.2 Настроить базу данных и хранилище
+Развернут локальный сервер. В качестве БД используется MongoDB (контейнер clearml-mongo), в качестве хранилища артефактов настроен локальный файловый сервер (clearml-fileserver), персистентность данных обеспечена через Docker Volumes.
+
+
+### 1.3	Создать проект и эксперименты
+
+
+![alt text](images/clearml_run.png)
+
+### 1.4	Настроить аутентификацию
+Настроили в 1.1.1
+
+## 2.	Трекинг экспериментов (3 балла):
+o	Настроить автоматическое логирование
+o	Создать систему сравнения экспериментов
+o	Настроить логирование метрик и параметров
+o	Создать дашборды для анализа
+## 3.	Управление моделями (3 балла):
+o	Настроить регистрацию и версионирование моделей
+o	Создать систему метаданных для моделей
+o	Настроить автоматическое создание версий
+o	Создать систему сравнения моделей
+## 4.	Пайплайны (2 балла):
+o	Создать ClearML пайплайны для ML workflow
+o	Настроить автоматический запуск пайплайнов
+o	Создать систему мониторинга выполнения
+o	Настроить уведомления
+## 5.	Отчет о проделанной работе (1 балл):
+o	Создать отчет в формате Markdown
+o	Описать настройку каждого инструмента
+o	Добавить скриншоты результатов
+o	Сохранить отчет в Git репозитории
+
+
+https://github.com/clearml/clearml-server/blob/master/docker/docker-compose.yml
 
 ## 1.	Настройка выбранного инструмента оркестрации (4 балла):
 ### 1.1 Установить и настроить выбранный инструмент   

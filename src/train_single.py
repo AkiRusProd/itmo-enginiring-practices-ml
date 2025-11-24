@@ -5,6 +5,8 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from clearml import Task
+from dotenv import load_dotenv
 from sklearn.metrics import f1_score
 from sklearn.model_selection import train_test_split
 
@@ -21,13 +23,13 @@ from base_config import (
     TB_LOG_DIR,
     TEST_SIZE,
 )
+from config_manager import get_config
 from result_logger import PipelineLogger, log_results
 from schemas import TrainMetrics
 from utils import log_experiment, save_model
 
 np.random.seed(SEED)
 
-# Инициализация логирования
 pipeline_logger = PipelineLogger("train_single", log_dir=LOG_DIR)
 
 
@@ -59,14 +61,35 @@ def train_single_model(model_name, writer=None):
     pipeline_logger.info(f"✓ {model_name}: F1-score = {f1:.4f}")
 
     # Log metrics and params
+    # ClearML автоматически перехватит данные из writer (TensorBoard)
     if writer:
         writer.add_scalar("F1_score", f1, 0)
         writer.add_text("Params", str(model.get_params()), 0)
 
     # Save model
+    # ClearML автоматически перехватит pickle dump благодаря output_uri=True
     Path(MODEL_DIR).mkdir(parents=True, exist_ok=True)
-    save_model(model, f"{MODEL_DIR}/{model_name}.pkl")
+    local_model_path = f"{MODEL_DIR}/{model_name}.pkl"
+    save_model(model, local_model_path)
     pipeline_logger.info(f"✓ Модель сохранена в: {MODEL_DIR}/{model_name}.pkl")
+
+    task = Task.current_task()
+
+    task.add_tags([temp_args.model, "candidate"])
+    model_params = model.get_params()
+    task.connect(model_params)
+
+    if task:
+        # Явно регистрируем файл как Output Model
+        # Это заставит ClearML загрузить файл на сервер и создать версию в разделе Models
+        task.update_output_model(
+            model_path=local_model_path,
+            model_name=model_name,
+            comment="Scikit-Learn",
+            auto_delete_file=False,
+        )
+        pipeline_logger.info("✓ Модель отправлена в ClearML Server")
+    # ------------------------------------
 
     # Save metrics to JSON using Pydantic validation
     metrics_path = Path(f"{METRICS_DIR}/train_models") / f"{model_name}_metrics.json"
@@ -93,11 +116,33 @@ def train_single_model(model_name, writer=None):
 
 
 if __name__ == "__main__":
+    load_dotenv()
+
+    # Предварительный парсинг аргументов, чтобы назвать Task именем модели
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", required=True, help="Model name to train")
     parser.add_argument(
         "--exp_name", required=False, default=None, help="Experiment name for logging"
     )
+    # Используем parse_known_args, чтобы не блокировать ClearML, если он добавит свои аргументы
+    temp_args, _ = parser.parse_known_args()
+
+    task = Task.init(
+        project_name="HW5_MLOps",
+        task_name=f"Train candidate: {temp_args.model}",
+        output_uri=True,  # Включает авто-сохранение моделей в Storage
+        auto_connect_frameworks=True,  # Авто-хуки для sklearn, matplotlib, pytorch и т.д.
+    )
+
+    # Логирование конфигурации (params.yaml)
+    # Получаем полный конфиг через менеджер и отправляем в UI
+    try:
+        full_config = get_config().model_dump(mode="json")
+        task.connect_configuration(full_config, name="App Configuration")
+    except Exception as e:
+        pipeline_logger.warning(f"Не удалось загрузить конфиг в ClearML: {e}")
+
+    # Полный парсинг аргументов (ClearML теперь отслеживает их)
     args = parser.parse_args()
 
     exp_name = (
@@ -107,12 +152,20 @@ if __name__ == "__main__":
 
     pipeline_logger.info(f"Начало обучения отдельной модели: {args.model}")
     try:
+        # Запуск обучения
+        # writer создается внутри декоратора @log_experiment
+        # ClearML подключится к нему автоматически
         train_single_model(args.model, exp_name=exp_name, log_dir=TB_LOG_DIR)
+
         pipeline_logger.info(f"✓ Обучение модели {args.model} завершено успешно")
+
+        task.close()
     except Exception as e:
         pipeline_logger.error(f"❌ Ошибка при обучении {args.model}: {e}")
         log_results(
             "failed",
             f"Обучение модели {args.model} завершилось с ошибкой: {e}",
         )
+        # Отмечаем задачу как проваленную в ClearML
+        task.mark_failed(status_message=str(e))
         raise

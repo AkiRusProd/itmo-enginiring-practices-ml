@@ -1,8 +1,11 @@
 import json
 from pathlib import Path
 
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from clearml import Task
+from dotenv import load_dotenv
 from joblib import load  # nosec
 from sklearn.metrics import (
     accuracy_score,
@@ -24,39 +27,94 @@ from base_config import (
 )
 from schemas import EvalMetrics
 
-np.random.seed(SEED)
 
-# Загружаем лучшую модель
-best_model_path = f"{MODEL_DIR}/best_model.pkl"
-model = load(best_model_path)  # nosec
+def evaluate_model():
+    load_dotenv()
+    np.random.seed(SEED)
 
-# Загружаем данные
-df = pd.read_csv(DATA_PATH)
-X = df[FEATURES]
-y = df[TARGET]
+    task = Task.init(
+        project_name="HW5_MLOps",
+        task_name="Advanced Evaluation",
+        task_type=Task.TaskTypes.testing,
+        auto_connect_frameworks=False,
+    )
+    logger = task.get_logger()
+    print("Task initialized. ID:", task.id)
 
-X_train, X_val, y_train, y_val = train_test_split(
-    X, y, test_size=TEST_SIZE, random_state=SEED
-)
+    best_model_path = f"{MODEL_DIR}/best_model.pkl"
+    try:
+        model = load(best_model_path)
+    except FileNotFoundError:
+        print("❌ Best model not found!")
+        task.close()  # Закрываем, если ошибка
+        return
 
-# Предсказания
-preds = model.predict(X_val)
+    df = pd.read_csv(DATA_PATH)
+    X = df[FEATURES]
+    y = df[TARGET]
 
-# Считаем несколько метрик и валидируем через Pydantic
-eval_metrics_obj = EvalMetrics(
-    accuracy=accuracy_score(y_val, preds),
-    precision=precision_score(y_val, preds, average="weighted"),
-    recall=recall_score(y_val, preds, average="weighted"),
-    f1=f1_score(y_val, preds, average="weighted"),
-    confusion_matrix=confusion_matrix(y_val, preds).tolist(),
-)
-eval_metrics = eval_metrics_obj.model_dump(mode="json")
+    X_train, X_val, y_train, y_val = train_test_split(
+        X, y, test_size=TEST_SIZE, random_state=SEED
+    )
 
-# Создаем папку и сохраняем
-Path(METRICS_DIR).mkdir(parents=True, exist_ok=True)
-with open(f"{METRICS_DIR}/best_model_advanced_metrics.json", "w") as f:
-    json.dump(eval_metrics, f, indent=4)
+    preds = model.predict(X_val)
 
-print(
-    f"Evaluation complete. Metrics saved to {METRICS_DIR}/best_model_advanced_metrics.json"
-)
+    acc = accuracy_score(y_val, preds)
+    prec = precision_score(y_val, preds, average="weighted")
+    rec = recall_score(y_val, preds, average="weighted")
+    f1 = f1_score(y_val, preds, average="weighted")
+    cm = confusion_matrix(y_val, preds)
+
+    # Логирование
+    logger.report_scalar("Evaluation", "Accuracy", acc, iteration=0)
+    logger.report_scalar("Evaluation", "Precision", prec, iteration=0)
+    logger.report_scalar("Evaluation", "Recall", rec, iteration=0)
+    logger.report_scalar("Evaluation", "F1", f1, iteration=0)
+
+    labels = [str(c) for c in sorted(y.unique())]
+    logger.report_confusion_matrix(
+        title="Confusion Matrix",
+        series="Test Set",
+        matrix=cm,
+        iteration=0,
+        xlabels=labels,
+        ylabels=labels,
+    )
+
+    if hasattr(model, "feature_importances_"):
+        plt.figure(figsize=(10, 6))
+        importances = model.feature_importances_
+        indices = np.argsort(importances)
+        plt.title("Feature Importances")
+        plt.barh(range(len(indices)), importances[indices], color="b", align="center")
+        plt.yticks(range(len(indices)), [FEATURES[i] for i in indices])
+        plt.xlabel("Relative Importance")
+
+        logger.report_matplotlib_figure(
+            title="Feature Importance", series="Top Features", figure=plt
+        )
+        plt.close()
+
+    eval_metrics_obj = EvalMetrics(
+        accuracy=acc,
+        precision=prec,
+        recall=rec,
+        f1=f1,
+        confusion_matrix=cm.tolist(),
+    )
+    eval_metrics = eval_metrics_obj.model_dump(mode="json")
+
+    Path(METRICS_DIR).mkdir(parents=True, exist_ok=True)
+    with open(f"{METRICS_DIR}/best_model_advanced_metrics.json", "w") as f:
+        json.dump(eval_metrics, f, indent=4)
+
+    print(f"Evaluation complete. F1: {f1:.4f}")
+
+    # !!! ВАЖНО: Закрываем задачу
+    print("Closing task...")
+    task.close()
+    print("Task closed.")
+
+
+if __name__ == "__main__":
+    evaluate_model()
