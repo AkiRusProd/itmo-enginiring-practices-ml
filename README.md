@@ -72,7 +72,7 @@ Directory structure:
 DVC уже установлен и настроен (см. ДЗ 2 и 3). 
 
 ### 1.2 Создать workflow для ML пайплайна
-Был расширен workflow в dvc.py до 3-х этапов: preprocess, train_models, evaluate. Также была реализована более гибкая логика подбора параметров из params.py
+Был расширен workflow в [dvc.py](dvc.py) до 4-х этапов: preprocess, train_models, select_best, evaluate. Также была реализована более гибкая логика подбора параметров из params.py
 
 ### 1.3	Настроить зависимости между этапами
 Зависимости данных также настроены в dvc.py. Рассмотреть граф зависимостей этапов пайплана можно через `dvc dag`:   
@@ -107,13 +107,25 @@ DVC предоставляет параллельное выполнение с�
 Интеграция завершена:
 - ConfigManager + DVC pipeline полностью интегрированы
 - train.py использует ConfigManager для загрузки конфигураций
-- DVC пайплайн (dvc.yaml) использует python3 команды
-- Все профили (dev/test/prod) работают через переменную `CONFIG_PROFILE` в dvc.yaml.
+- DVC пайплайн ([dvc.yaml](dvc.yaml)) использует python3 команды
+- Все профили (dev/test/prod) работают через переменную `CONFIG_PROFILE` в [dvc.yaml](dvc.yaml).
 
 ### 3.2 Создать систему мониторинга выполнения
-Реализована в `src/result_logger.py`:
+Реализована в [src/result_logger.py](src/result_logger.py):
 - **PipelineLogger** класс для логирования каждого этапа
-- Логи сохраняются в `logs/train_YYYYMMDD_HHMMSS.log`
+- Логи сохраняются в `logs/train_YYYYMMDD_HHMMSS.log`.      
+  Пример:
+  ```log
+    2025-11-21 11:13:11,466 - INFO - Начало обучения отдельной модели: LogisticRegression
+    2025-11-21 11:13:11,467 - INFO - Загрузка данных из data/processed/processed.csv
+    2025-11-21 11:13:11,472 - INFO - Размер данных: (891, 12)
+    2025-11-21 11:13:11,473 - INFO - Разделение: train=668, val=223
+    2025-11-21 11:13:11,473 - INFO - Тренировка модели: LogisticRegression
+    2025-11-21 11:13:11,765 - INFO - ✓ LogisticRegression: F1-score = 0.8062
+    2025-11-21 11:13:11,766 - INFO - ✓ Модель сохранена в: models/LogisticRegression.pkl
+    2025-11-21 11:13:11,767 - INFO - ✓ Метрики сохранены в: metrics/train_models/LogisticRegression_metrics.json
+    2025-11-21 11:13:11,768 - INFO - ✓ Обучение модели LogisticRegression завершено успешно
+  ```
 - Вывод одновременно в консоль и в файл
 - Информация о начале/окончании каждого этапа
 
@@ -121,7 +133,7 @@ DVC предоставляет параллельное выполнение с�
 Система уведомлений реализована:
 - Результаты выводятся в консоль
 - Результаты сохраняются в `logs/results_YYYYMMDD.log`
-- JSON метрики в `metrics/metrics.json`
+- JSON метрики в [metrics/metrics.json](/home/rustam/my-projects/itmo-enginiring-practices-ml/metrics)
 - Красивый вывод лучшей модели и всех результатов
 
 ### 3.4 Протестировать воспроизводимость
