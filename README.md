@@ -133,7 +133,7 @@ DVC предоставляет параллельное выполнение с�
 Система уведомлений реализована:
 - Результаты выводятся в консоль
 - Результаты сохраняются в `logs/results_YYYYMMDD.log`
-- JSON метрики в [metrics/metrics.json](/home/rustam/my-projects/itmo-enginiring-practices-ml/metrics)
+- JSON метрики в [metrics/metrics.json](metrics/metrics.json)
 - Красивый вывод лучшей модели и всех результатов
 
 ### 3.4 Протестировать воспроизводимость
