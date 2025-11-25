@@ -136,6 +136,10 @@ DVC предоставляет параллельное выполнение с�
 - JSON метрики в [metrics/best_model_metrics.json](metrics/best_model_metrics.json)
 - Красивый вывод лучшей модели и всех результатов
 
+При желании можно настроить уведомления через tg-бота. Для этого нужно заполнить `.env` как в примере [.env.example](.env.example).
+
+![alt text](images/tg_bot.png)
+
 ### 3.4 Протестировать воспроизводимость
 Воспроизводимость поддержана:
 ![alt text](images/test_repro.png)

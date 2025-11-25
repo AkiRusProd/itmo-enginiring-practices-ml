@@ -60,7 +60,7 @@ stages:
     outs:
     - path: metrics/train_models/LogisticRegression_metrics.json
       hash: md5
-      md5: abd2719370152df060b87404946f1198
+      md5: a0c97f4b1adb7021cc777f425984b4e9
       size: 143
     - path: models/LogisticRegression.pkl
       hash: md5
@@ -109,7 +109,7 @@ stages:
     outs:
     - path: metrics/train_models/RandomForest_metrics.json
       hash: md5
-      md5: 844aa98aab6730acd84056e6073f6077
+      md5: 4ad33eea5d1efb51d8a77ee88f44b17b
       size: 137
     - path: models/RandomForest.pkl
       hash: md5
@@ -158,7 +158,7 @@ stages:
     outs:
     - path: metrics/train_models/GradientBoosting_metrics.json
       hash: md5
-      md5: a7dad98eb84d12d432f1581dda774f2a
+      md5: 5982a1bd5f7aa84692431455ac8c0012
       size: 141
     - path: models/GradientBoosting.pkl
       hash: md5
@@ -207,7 +207,7 @@ stages:
     outs:
     - path: metrics/train_models/SVC_metrics.json
       hash: md5
-      md5: 6ebba0439b3efe321bd633751ba74be8
+      md5: 83f9dcf5b46ebe0f4bb309eaea2ecbb5
       size: 128
     - path: models/SVC.pkl
       hash: md5
@@ -256,7 +256,7 @@ stages:
     outs:
     - path: metrics/train_models/DecisionTree_metrics.json
       hash: md5
-      md5: 32894cf2c9224c49368adaeb8e6b3f12
+      md5: b6047dcd026b76038ba77d10cf14b913
       size: 136
     - path: models/DecisionTree.pkl
       hash: md5
@@ -305,7 +305,7 @@ stages:
     outs:
     - path: metrics/train_models/AdaBoost_metrics.json
       hash: md5
-      md5: 6623bd48c22bb80e988caa03ad1abe71
+      md5: a4b99d97525b5ead4c3f15870ea00520
       size: 133
     - path: models/AdaBoost.pkl
       hash: md5
@@ -354,7 +354,7 @@ stages:
     outs:
     - path: metrics/train_models/Bagging_metrics.json
       hash: md5
-      md5: 588b9d321bf6918b312f1700ed58da09
+      md5: 3614d6374495f4e015043badd9035888
       size: 132
     - path: models/Bagging.pkl
       hash: md5
@@ -365,13 +365,13 @@ stages:
     deps:
     - path: metrics/train_models
       hash: md5
-      md5: 2840a1cd11dbec4557985af338be7278.dir
+      md5: 0c2c690360b1134e364392f561d4fea6.dir
       size: 950
       nfiles: 7
     - path: src/select_best.py
       hash: md5
-      md5: 5d74747c20e6ec83fa34b9d0ffbb3ab6
-      size: 1505
+      md5: 7a8b8a53c2ef6bf2d459f444395b7b1a
+      size: 2238
     outs:
     - path: metrics/best_model_metrics.json
       hash: md5
@@ -394,8 +394,8 @@ stages:
       size: 70389
     - path: src/eval.py
       hash: md5
-      md5: 7c766e14137f48556d9255896b7a8352
-      size: 1644
+      md5: bfc2765d96ad17d65bf566b8394cfbbc
+      size: 1861
     outs:
     - path: metrics/best_model_advanced_metrics.json
       hash: md5

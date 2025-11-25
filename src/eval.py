@@ -22,41 +22,48 @@ from base_config import (
     TARGET,
     TEST_SIZE,
 )
+from result_logger import PipelineLogger, log_results
 from schemas import EvalMetrics
+
+logger = PipelineLogger("evaluation")
 
 np.random.seed(SEED)
 
-# Загружаем лучшую модель
-best_model_path = f"{MODEL_DIR}/best_model.pkl"
-model = load(best_model_path)  # nosec
 
-# Загружаем данные
-df = pd.read_csv(DATA_PATH)
-X = df[FEATURES]
-y = df[TARGET]
+def main():
+    try:
+        logger.info("Starting model evaluation...")
 
-X_train, X_val, y_train, y_val = train_test_split(
-    X, y, test_size=TEST_SIZE, random_state=SEED
-)
+        model = load(f"{MODEL_DIR}/best_model.pkl")
+        df = pd.read_csv(DATA_PATH)
 
-# Предсказания
-preds = model.predict(X_val)
+        X_train, X_val, y_train, y_val = train_test_split(
+            df[FEATURES], df[TARGET], test_size=TEST_SIZE, random_state=SEED
+        )
 
-# Считаем несколько метрик и валидируем через Pydantic
-eval_metrics_obj = EvalMetrics(
-    accuracy=accuracy_score(y_val, preds),
-    precision=precision_score(y_val, preds, average="weighted"),
-    recall=recall_score(y_val, preds, average="weighted"),
-    f1=f1_score(y_val, preds, average="weighted"),
-    confusion_matrix=confusion_matrix(y_val, preds).tolist(),
-)
-eval_metrics = eval_metrics_obj.model_dump(mode="json")
+        preds = model.predict(X_val)
 
-# Создаем папку и сохраняем
-Path(METRICS_DIR).mkdir(parents=True, exist_ok=True)
-with open(f"{METRICS_DIR}/best_model_advanced_metrics.json", "w") as f:
-    json.dump(eval_metrics, f, indent=4)
+        metrics = EvalMetrics(
+            accuracy=accuracy_score(y_val, preds),
+            precision=precision_score(y_val, preds, average="weighted"),
+            recall=recall_score(y_val, preds, average="weighted"),
+            f1=f1_score(y_val, preds, average="weighted"),
+            confusion_matrix=confusion_matrix(y_val, preds).tolist(),
+        ).model_dump(mode="json")
 
-print(
-    f"Evaluation complete. Metrics saved to {METRICS_DIR}/best_model_advanced_metrics.json"
-)
+        Path(METRICS_DIR).mkdir(parents=True, exist_ok=True)
+        with open(f"{METRICS_DIR}/best_model_advanced_metrics.json", "w") as f:
+            json.dump(metrics, f, indent=4)
+
+        tg_metrics = {k: v for k, v in metrics.items() if k != "confusion_matrix"}
+
+        log_results("success", "Evaluation completed successfully", metrics=tg_metrics)
+
+    except Exception as e:
+        logger.error(f"Evaluation failed: {e}")
+        log_results("failed", f"Evaluation crashed: {e}")
+        raise e
+
+
+if __name__ == "__main__":
+    main()

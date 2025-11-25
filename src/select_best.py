@@ -1,52 +1,68 @@
 import glob
 import json
 from pathlib import Path
+from shutil import copyfile
 
 from base_config import METRICS_DIR, MODEL_DIR
+from result_logger import PipelineLogger, log_results
 from schemas import BestModelMetrics, TrainMetrics
+
+logger = PipelineLogger("select_best")
 
 
 def select_best_model():
-    metrics_files = glob.glob(f"{METRICS_DIR}/train_models/*_metrics.json")
-    all_metrics = {}
-    best_acc = -1
-    best_model = None
+    try:
+        logger.info("Starting best model selection...")
 
-    for file in metrics_files:
-        with open(file, "r") as f:
-            metrics_data = json.load(f)
-            # Validate using Pydantic schema
-            metrics = TrainMetrics(**metrics_data)
-            model_name = metrics.model
-            acc = metrics.f1_score
+        metrics_files = glob.glob(f"{METRICS_DIR}/train_models/*_metrics.json")
+        if not metrics_files:
+            raise FileNotFoundError(
+                f"No metrics files found in {METRICS_DIR}/train_models"
+            )
 
-            all_metrics[model_name] = acc
+        all_metrics = {}
+        best_acc = -1.0
+        best_model = None
 
-            if acc > best_acc:
-                best_acc = acc
-                best_model = model_name
+        # 1. Поиск лучшей модели
+        for file in metrics_files:
+            with open(file, "r") as f:
+                data = TrainMetrics(**json.load(f))
+                all_metrics[data.model] = data.f1_score
 
-    # Create and validate final metrics using Pydantic schema
-    final_metrics = BestModelMetrics(
-        best_model=best_model,
-        best_f1_score=best_acc,
-        models=all_metrics,
-    )
-    metrics_dict = final_metrics.model_dump(mode="json")
+                if data.f1_score > best_acc:
+                    best_acc = data.f1_score
+                    best_model = data.model
 
-    # Create final metrics file
-    Path("metrics").mkdir(parents=True, exist_ok=True)
+        if not best_model:
+            raise ValueError(
+                "Could not determine best model (list is empty or errors occurred)"
+            )
 
-    with open(f"{METRICS_DIR}/best_model_metrics.json", "w") as f:
-        json.dump(metrics_dict, f, indent=4)
+        # 2. Сохранение итоговых метрик
+        final_metrics = BestModelMetrics(
+            best_model=best_model,
+            best_f1_score=best_acc,
+            models=all_metrics,
+        ).model_dump(mode="json")
 
-    print(f"Best model: {best_model} with f1 score: {best_acc:.4f}")
+        Path(METRICS_DIR).mkdir(parents=True, exist_ok=True)
+        with open(f"{METRICS_DIR}/best_model_metrics.json", "w") as f:
+            json.dump(final_metrics, f, indent=4)
 
-    # Optionally, copy best model to a separate file
-    if best_model:
-        from shutil import copyfile
-
+        # 3. Копирование файла модели
         copyfile(f"{MODEL_DIR}/{best_model}.pkl", f"{MODEL_DIR}/best_model.pkl")
+
+        logger.info(f"🏆 Selected: {best_model} (F1: {best_acc:.4f})")
+
+        # 4. Уведомление в Telegram
+        summary = {"selected_model": best_model, "best_f1_score": best_acc}
+        log_results("success", f"Best model selected: {best_model}", metrics=summary)
+
+    except Exception as e:
+        logger.error(f"Selection failed: {e}")
+        log_results("failed", f"Model selection crashed: {e}")
+        raise e
 
 
 if __name__ == "__main__":
