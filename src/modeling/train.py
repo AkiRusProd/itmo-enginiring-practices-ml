@@ -45,6 +45,7 @@ if __name__ == "__main__":
 
     # Сохраняем метрики
     score = model.score(X_test, y_test)
+    os.makedirs("metrics", exist_ok=True)
     with open("metrics/metrics.json", "w") as f:
         json.dump({"r2_score": score}, f)
 
