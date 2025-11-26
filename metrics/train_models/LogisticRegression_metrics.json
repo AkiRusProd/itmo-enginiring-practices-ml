@@ -1,6 +1,6 @@
 {
     "model": "LogisticRegression",
     "f1_score": 0.8061541955629411,
-    "timestamp": "2025-11-26T21:50:58.542502",
+    "timestamp": "2025-11-26T23:05:56.510404",
     "profile": "test"
 }
