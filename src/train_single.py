@@ -51,12 +51,16 @@ def train_single_model(model_name, writer=None):
         pipeline_logger.error(f"Файл {DATA_PATH} не найден. Запустите preprocess.")
         raise
 
+    pipeline_logger.info(f"Размер данных: {df.shape}")
+
     X = df[FEATURES]
     y = df[TARGET]
 
     X_train, X_val, y_train, y_val = train_test_split(
         X, y, test_size=TEST_SIZE, random_state=SEED
     )
+
+    pipeline_logger.info(f"Разделение: train={X_train.shape[0]}, val={X_val.shape[0]}")
 
     # 2. Получение и обучение модели
     pipeline_logger.info(f"Тренировка модели: {model_name}")
@@ -160,5 +164,10 @@ if __name__ == "__main__":
 
     except Exception as e:
         main_logger.error(f"❌ Ошибка при обучении {args.model}: {e}")
+        # Логируем ошибку и в локальный файл results, и в ClearML
+        log_results(
+            "failed",
+            f"Обучение модели {args.model} завершилось с ошибкой: {e}",
+        )
         task.mark_failed(status_message=str(e))
         raise

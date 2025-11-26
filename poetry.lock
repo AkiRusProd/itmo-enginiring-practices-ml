@@ -4646,6 +4646,30 @@ files = [
 diagrams = ["jinja2", "railroad-diagrams"]
 
 [[package]]
+name = "pytelegrambotapi"
+version = "4.29.1"
+description = "Python Telegram bot API."
+optional = false
+python-versions = ">=3.9"
+files = [
+    {file = "pytelegrambotapi-4.29.1-py3-none-any.whl", hash = "sha256:961cd699c84864d29a3528eccd5319a558068a935a32b7c953c3b780b38f0d93"},
+    {file = "pytelegrambotapi-4.29.1.tar.gz", hash = "sha256:dd33d526e537eccb464175dd0326781a1c9fdb87db3ac141ec911e797f7e0797"},
+]
+
+[package.dependencies]
+requests = "*"
+
+[package.extras]
+coloredlogs = ["coloredlogs"]
+fastapi = ["fastapi"]
+json = ["ujson"]
+pil = ["pillow"]
+psutil = ["psutil"]
+redis = ["redis (>=3.4.1)"]
+uvicorn = ["uvicorn"]
+watchdog = ["watchdog"]
+
+[[package]]
 name = "pytest"
 version = "9.0.1"
 description = "pytest: simple powerful testing with Python"
@@ -6282,4 +6306,4 @@ test = ["zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "2b0a6a3dd8c6d649c46a055c29361a36bdc3478ce3d9b2ef26a944b59f8145b9"
+content-hash = "2c9923804b97c873417505835a13ee81d71efa7b7af18908106bbc0f1afc7293"

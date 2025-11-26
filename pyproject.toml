@@ -24,6 +24,7 @@ dvc = "^3.64.0"
 tensorboard = "^2.20.0"
 tensorboardx = "^2.6.4"
 clearml = "^2.0.2"
+pytelegrambotapi = "^4.29.1"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.7.0"
