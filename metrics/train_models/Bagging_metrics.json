@@ -1,6 +1,6 @@
 {
     "model": "Bagging",
-    "f1_score": 0.7940924808283788,
-    "timestamp": "2025-11-25T01:55:17.757065",
-    "profile": "test"
+    "f1_score": 0.767989290177122,
+    "timestamp": "2025-11-26T21:42:36.104863",
+    "profile": "dev"
 }

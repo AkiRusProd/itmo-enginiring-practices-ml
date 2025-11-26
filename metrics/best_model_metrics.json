@@ -1,13 +1,13 @@
 {
-    "best_model": "GradientBoosting",
-    "best_f1_score": 0.8088875682100598,
+    "best_model": "LogisticRegression",
+    "best_f1_score": 0.8119117897584057,
     "models": {
-        "AdaBoost": 0.8051730293384642,
-        "LogisticRegression": 0.8061541955629411,
-        "Bagging": 0.7940924808283788,
-        "SVC": 0.6139535148911422,
-        "DecisionTree": 0.761869450662899,
-        "RandomForest": 0.7851399799948301,
-        "GradientBoosting": 0.8088875682100598
+        "AdaBoost": 0.8075658099476718,
+        "LogisticRegression": 0.8119117897584057,
+        "Bagging": 0.767989290177122,
+        "SVC": 0.7893412045294145,
+        "DecisionTree": 0.7936729090907125,
+        "RandomForest": 0.7809174694071854,
+        "GradientBoosting": 0.7950750458950411
     }
 }

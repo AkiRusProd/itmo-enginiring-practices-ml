@@ -29,27 +29,37 @@ from schemas import EvalMetrics
 
 
 def evaluate_model():
-    load_dotenv()
+    """
+    Загружает лучшую модель (best_model.pkl), проводит оценку на валидационном наборе,
+    строит графики (Confusion Matrix, Feature Importance) и отправляет их в ClearML.
+    """
     np.random.seed(SEED)
 
-    task = Task.init(
-        project_name="HW5_MLOps",
-        task_name="Advanced Evaluation",
-        task_type=Task.TaskTypes.testing,
-        auto_connect_frameworks=False,
-    )
-    logger = task.get_logger()
-    print("Task initialized. ID:", task.id)
+    # Пытаемся получить текущую задачу (от PipelineController или из main)
+    task = Task.current_task()
+    logger = task.get_logger() if task else None
 
+    print("Starting evaluation...")
+
+    # 1. Загрузка модели
     best_model_path = f"{MODEL_DIR}/best_model.pkl"
     try:
         model = load(best_model_path)
+        print(f"Loaded model from {best_model_path}")
     except FileNotFoundError:
-        print("❌ Best model not found!")
-        task.close()  # Закрываем, если ошибка
-        return
+        print(
+            f"❌ Best model not found at {best_model_path}! Run select_best step first."
+        )
+        # Если запущено в пайплайне, лучше поднять ошибку, чтобы шаг покраснел
+        raise
 
-    df = pd.read_csv(DATA_PATH)
+    # 2. Загрузка данных
+    try:
+        df = pd.read_csv(DATA_PATH)
+    except FileNotFoundError:
+        print(f"❌ Data file not found at {DATA_PATH}!")
+        raise
+
     X = df[FEATURES]
     y = df[TARGET]
 
@@ -57,6 +67,7 @@ def evaluate_model():
         X, y, test_size=TEST_SIZE, random_state=SEED
     )
 
+    # 3. Предикт
     preds = model.predict(X_val)
 
     acc = accuracy_score(y_val, preds)
@@ -65,22 +76,26 @@ def evaluate_model():
     f1 = f1_score(y_val, preds, average="weighted")
     cm = confusion_matrix(y_val, preds)
 
-    # Логирование
-    logger.report_scalar("Evaluation", "Accuracy", acc, iteration=0)
-    logger.report_scalar("Evaluation", "Precision", prec, iteration=0)
-    logger.report_scalar("Evaluation", "Recall", rec, iteration=0)
-    logger.report_scalar("Evaluation", "F1", f1, iteration=0)
+    # 4. Логирование скаляров
+    if logger:
+        logger.report_scalar("Evaluation", "Accuracy", acc, iteration=0)
+        logger.report_scalar("Evaluation", "Precision", prec, iteration=0)
+        logger.report_scalar("Evaluation", "Recall", rec, iteration=0)
+        logger.report_scalar("Evaluation", "F1", f1, iteration=0)
 
-    labels = [str(c) for c in sorted(y.unique())]
-    logger.report_confusion_matrix(
-        title="Confusion Matrix",
-        series="Test Set",
-        matrix=cm,
-        iteration=0,
-        xlabels=labels,
-        ylabels=labels,
-    )
+    # 5. Логирование Confusion Matrix
+    if logger:
+        labels = [str(c) for c in sorted(y.unique())]
+        logger.report_confusion_matrix(
+            title="Confusion Matrix",
+            series="Test Set",
+            matrix=cm,
+            iteration=0,
+            xlabels=labels,
+            ylabels=labels,
+        )
 
+    # 6. Логирование Feature Importance (если поддерживается)
     if hasattr(model, "feature_importances_"):
         plt.figure(figsize=(10, 6))
         importances = model.feature_importances_
@@ -90,11 +105,13 @@ def evaluate_model():
         plt.yticks(range(len(indices)), [FEATURES[i] for i in indices])
         plt.xlabel("Relative Importance")
 
-        logger.report_matplotlib_figure(
-            title="Feature Importance", series="Top Features", figure=plt
-        )
+        if logger:
+            logger.report_matplotlib_figure(
+                title="Feature Importance", series="Top Features", figure=plt
+            )
         plt.close()
 
+    # 7. Сохранение метрик локально и как артефакт
     eval_metrics_obj = EvalMetrics(
         accuracy=acc,
         precision=prec,
@@ -105,16 +122,34 @@ def evaluate_model():
     eval_metrics = eval_metrics_obj.model_dump(mode="json")
 
     Path(METRICS_DIR).mkdir(parents=True, exist_ok=True)
-    with open(f"{METRICS_DIR}/best_model_advanced_metrics.json", "w") as f:
+    json_path = f"{METRICS_DIR}/best_model_advanced_metrics.json"
+    with open(json_path, "w") as f:
         json.dump(eval_metrics, f, indent=4)
 
     print(f"Evaluation complete. F1: {f1:.4f}")
 
-    # !!! ВАЖНО: Закрываем задачу
-    print("Closing task...")
-    task.close()
-    print("Task closed.")
+    if task:
+        task.upload_artifact("advanced_metrics", eval_metrics)
+        print("Metrics uploaded to ClearML.")
 
 
 if __name__ == "__main__":
-    evaluate_model()
+    load_dotenv()
+    # Инициализация задачи только при ручном запуске
+    task = Task.init(
+        project_name="HW5_MLOps",
+        task_name="Advanced Evaluation",
+        task_type=Task.TaskTypes.testing,
+        auto_connect_frameworks=False,
+    )
+
+    try:
+        evaluate_model()
+    except Exception as e:
+        print(f"❌ Evaluation failed: {e}")
+        task.mark_failed(status_message=str(e))
+        raise
+
+    print("Closing task...")
+    task.close()
+    print("Task closed.")
