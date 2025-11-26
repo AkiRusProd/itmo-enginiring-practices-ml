@@ -1,10 +1,10 @@
-# itmo-enginiring-practices-ml
+# itmo-engineering-practices-ml
 
 <a target="_blank" href="https://cookiecutter-data-science.drivendata.org/">
     <img src="https://img.shields.io/badge/CCDS-Project%20template-328F97?logo=cookiecutter" />
 </a>
 
-Template for course enginiring-practices-ml
+Template for course engineering-practices-ml
 
 ## Project Organization
 
@@ -95,8 +95,8 @@ Template for course enginiring-practices-ml
 - Создан Dockerfile
   * Команды
     ```
-    docker build -t itmo-enginiring-practices-ml .
-    docker run --rm itmo-enginiring-practices-ml
+    docker build -t itmo-engineering-practices-ml .
+    docker run --rm itmo-engineering-practices-ml
     ```
   * Пример сборки
   ![alt text](images/docker_build.png)
@@ -109,9 +109,18 @@ Template for course enginiring-practices-ml
     ```
 
 ## 4. Git workflow
-- Создан .gitignore
-- Созданы ветки master, hw1
-
+- **Инициализация:** Настроен Git репозиторий, создан `.gitignore` для Python/ML проектов (исключены venv, __pycache__, модели, raw data).
+- **Стратегия ветвления (Branching Strategy):**
+  В проекте используется подход **Feature Branch Workflow**:
+  1.  **`master`:** Основная ветка. Содержит только стабильный, протестированный код. Прямые коммиты в master запрещены (protected branch).
+  2.  **`hw<номер>` (например, `hw1`):** Ветки для выполнения домашних заданий. Отделяются от `master`. После выполнения задания и прохождения тестов, ветка сдается на проверку (или вливается в master через Pull Request).
+  3.  **`feature/<название>`:** Для разработки новых фич (например, `feature/add-preprocessing`).
+  4.  **`fix/<название>`:** Для исправления багов.
+- **Процесс работы:**
+  - Создание ветки под задачу.
+  - Регулярные атомарные коммиты с понятными сообщениями ([Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)).
+  - Использование pre-commit хуков перед коммитом.
+  - Слияние в основную ветку через Pull Request (Merge Request) после код-ревью.
 
 --------
 
