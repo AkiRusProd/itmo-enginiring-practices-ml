@@ -27,7 +27,7 @@ stages:
 
 
   select_best:
-    cmd: python src/select_best.py
+    cmd: CONFIG_PROFILE=test python src/select_best.py
     deps:
       - src/select_best.py
       - metrics/train_models
@@ -38,7 +38,7 @@ stages:
       - models/best_model.pkl
 
   evaluate:
-    cmd: python src/eval.py
+    cmd: CONFIG_PROFILE=test python src/eval.py
     deps:
       - src/eval.py
       - models/best_model.pkl
