@@ -1,6 +1,6 @@
 {
     "model": "GradientBoosting",
-    "f1_score": 0.7950750458950411,
-    "timestamp": "2025-11-26T21:42:37.026566",
-    "profile": "dev"
+    "f1_score": 0.8088875682100598,
+    "timestamp": "2025-11-26T21:51:31.944939",
+    "profile": "test"
 }

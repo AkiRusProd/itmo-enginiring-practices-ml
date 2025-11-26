@@ -39,6 +39,9 @@ def evaluate_model():
     task = Task.current_task()
     logger = task.get_logger() if task else None
 
+    if task:
+        task.add_tags(["evaluation", "testing"])
+
     print("Starting evaluation...")
 
     # 1. Загрузка модели

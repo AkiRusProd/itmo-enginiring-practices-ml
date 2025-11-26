@@ -1,6 +1,6 @@
 {
     "model": "DecisionTree",
-    "f1_score": 0.7936729090907125,
-    "timestamp": "2025-11-26T21:42:36.754922",
-    "profile": "dev"
+    "f1_score": 0.761869450662899,
+    "timestamp": "2025-11-26T21:52:05.593182",
+    "profile": "test"
 }

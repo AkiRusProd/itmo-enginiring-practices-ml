@@ -21,6 +21,9 @@ def select_best_model():
     task = Task.current_task()
     logger = task.get_logger() if task else None
 
+    if task:
+        task.add_tags(["optimizer", "selection"])
+
     print("Starting selection of best model...")
 
     # 1. Сбор метрик из файлов

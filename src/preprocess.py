@@ -35,6 +35,7 @@ def preprocess(input_path=RAW_DATA_PATH, output_path=DATA_PATH):
     # Получаем текущую задачу (она может быть создана в main или пайплайном)
     task = Task.current_task()
     if task:
+        task.add_tags(["preprocessing", "data"])
         # Загружаем обработанный файл как артефакт ClearML
         # Это позволит следующим шагам пайплайна скачать этот файл
         task.upload_artifact(name="processed_data", artifact_object=str(output_path))

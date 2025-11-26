@@ -1,6 +1,6 @@
 {
     "model": "AdaBoost",
-    "f1_score": 0.8075658099476718,
-    "timestamp": "2025-11-26T21:42:36.042008",
-    "profile": "dev"
+    "f1_score": 0.8051730293384642,
+    "timestamp": "2025-11-26T21:52:22.750931",
+    "profile": "test"
 }
