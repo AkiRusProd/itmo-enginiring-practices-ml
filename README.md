@@ -111,7 +111,7 @@ Template for course engineering-practices-ml
 ## 4. Git workflow
 - **Инициализация:** Настроен Git репозиторий, создан `.gitignore` для Python/ML проектов (исключены venv, __pycache__, модели, raw data).
 - **Стратегия ветвления (Branching Strategy):**
-  В проекте используется подход **Feature Branch Workflow**:
+  В проекте используется подход [**Feature Branch Workflow**](https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow):
   1.  **`master`:** Основная ветка. Содержит только стабильный, протестированный код. Прямые коммиты в master запрещены (protected branch).
   2.  **`hw<номер>` (например, `hw1`):** Ветки для выполнения домашних заданий. Отделяются от `master`. После выполнения задания и прохождения тестов, ветка сдается на проверку (или вливается в master через Pull Request).
   3.  **`feature/<название>`:** Для разработки новых фич (например, `feature/add-preprocessing`).
