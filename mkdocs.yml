@@ -1,0 +1,79 @@
+site_name: MLOps Pipeline Documentation
+site_description: Documentation for HW5 MLOps Project
+site_author: AkirusProd
+repo_url: https://github.com/AkiRusProd/itmo-enginiring-practices-ml
+repo_name: HW5_MLOps
+
+theme:
+  name: material
+  palette:
+    # Светлая тема
+    - scheme: default
+      primary: teal
+      accent: purple
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Темная тема (Slate)
+    - scheme: slate
+      primary: teal
+      accent: lime
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+  font:
+    text: Roboto
+    code: JetBrains Mono
+
+  features:
+    - navigation.sections
+    - navigation.expand
+    - content.code.copy
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [src]
+          options:
+            show_root_heading: true
+            show_source: true
+
+# markdown_extensions:
+#   # Поддержка красивых "Warning", "Note", "Tip" блоков
+#   - admonition
+#   - pymdownx.details
+#   - pymdownx.superfences
+  
+#   # Красивые табы для кода (например, переключение Linux/Windows)
+#   - pymdownx.tabbed:
+#       alternate_style: true
+  
+#   # Подсветка синтаксиса
+#   - pymdownx.highlight:
+#       anchor_linenums: true
+#       line_spans: __span
+#       pygments_lang_class: true
+#   - pymdownx.inlinehilite
+#   - pymdownx.snippets
+  
+#   # Иконки и эмодзи
+#   - pymdownx.emoji:
+#       emoji_index: !!python/name:materialx.emoji.twemoji
+#       emoji_generator: !!python/name:materialx.emoji.to_svg
+
+nav:
+  - Home: index.md
+  - Guide:
+      - Quick Start: quickstart.md
+      - Deployment: deployment.md
+  - Experiments:
+      - Report: experiments.md
+  - API Reference:
+      - Config Manager: reference/config.md
+      - Pipeline Controller: reference/pipeline.md
+      - Training: reference/train.md
+      - Evaluation: reference/eval.md

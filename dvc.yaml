@@ -46,3 +46,15 @@ stages:
     metrics:
       - metrics/best_model_advanced_metrics.json:
           cache: false
+
+  report:
+    cmd: python src/generate_report.py
+    deps:
+      - src/generate_report.py
+      - metrics/best_model_advanced_metrics.json
+      - metrics/train_models
+    outs:
+      - docs/experiments.md:
+          cache: false
+      - docs/assets/images:
+          cache: false

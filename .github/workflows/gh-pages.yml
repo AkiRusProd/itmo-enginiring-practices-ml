@@ -1,0 +1,40 @@
+name: Publish Docs
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.9
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install mkdocs-material mkdocstrings[python] tabulate pandas
+
+      # Генерируем отчет перед сборкой документации
+      # Предполагаем, что метрики уже есть в репозитории или генерируются (в реальном CI нужно подтянуть их через dvc pull)
+      - name: Generate Report
+        run: python src/generate_report.py
+        continue-on-error: true # Чтобы сборка не падала, если нет метрик
+
+      - name: Configure Git User
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Deploy to GitHub Pages
+        run: mkdocs gh-deploy --force

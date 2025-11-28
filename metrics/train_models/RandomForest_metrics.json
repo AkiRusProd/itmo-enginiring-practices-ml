@@ -1,6 +1,6 @@
 {
     "model": "RandomForest",
-    "f1_score": 0.7809174694071854,
-    "timestamp": "2025-11-27T02:21:44.934356",
-    "profile": "dev"
+    "f1_score": 0.7851399799948301,
+    "timestamp": "2025-11-28T01:36:06.799662",
+    "profile": "test"
 }
