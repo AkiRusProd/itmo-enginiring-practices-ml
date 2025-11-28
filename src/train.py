@@ -1,3 +1,10 @@
+"""
+Модуль массового обучения моделей (Legacy).
+
+Обучает все модели, перечисленные в конфигурации, последовательно.
+Этот скрипт используется для локальных тестов и проверки всех моделей сразу,
+без использования пайплайна ClearML. Результаты сохраняются локально.
+"""
 import json
 import random
 from datetime import datetime
@@ -54,14 +61,16 @@ def train_model(name, model, X_train, y_train, X_val, y_val, writer=None):
     и вычисляет F1-score. Сохраняет модель в `MODEL_DIR`.
 
     Args:
-        name: Имя модели (ключ в конфигурации).
-        model: Экземпляр модели для обучения.
-        X_train, y_train: Данные для обучения.
-        X_val, y_val: Валидационный набор для оценки.
-        writer: Необязательный `SummaryWriter` для логирования метрик.
+        name (str): Имя модели (ключ в конфигурации).
+        model (sklearn.base.BaseEstimator): Экземпляр модели для обучения.
+        X_train (pd.DataFrame): Обучающая выборка признаков.
+        y_train (pd.Series): Обучающая выборка целевой переменной.
+        X_val (pd.DataFrame): Валидационная выборка признаков.
+        y_val (pd.Series): Валидационная выборка целевой переменной.
+        writer (Optional[SummaryWriter]): Необязательный `SummaryWriter` для логирования метрик в TensorBoard.
 
     Returns:
-        F1-score на валидационном наборе.
+        float: F1-score на валидационном наборе.
     """
 
     model.fit(X_train, y_train)

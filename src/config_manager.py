@@ -10,12 +10,13 @@ from schemas import AppConfig, ConfigProfile, ModelsConfig, TrainConfig
 
 
 class ConfigManager:
-    """
-    Менеджер конфигурации с поддержкой:
-    - нескольких профилей (dev, test, prod)
-    - объединения и композиции конфигураций
-    - подстановки переменных окружения
-    - иерархии конфигурационных файлов
+    """Менеджер конфигурации приложения.
+
+    Обеспечивает загрузку, слияние и валидацию настроек из YAML-файлов.
+    Поддерживает иерархию конфигураций:
+    1. Переменные окружения (CONFIG_PROFILE)
+    2. Профильные конфиги (dev, test, prod)
+    3. Базовый конфиг (params.yaml)
     """
 
     # Default configuration file paths
@@ -27,11 +28,12 @@ class ConfigManager:
     }
 
     def __init__(self, profile: Optional[ConfigProfile] = None):
-        """Инициализация ConfigManager.
+        """Инициализирует менеджер конфигурации.
 
         Args:
-            profile: Профиль конфигурации (dev/test/prod). Если None,
-                     профиль читается из переменной окружения `CONFIG_PROFILE`.
+            profile (Optional[ConfigProfile]): Явное указание профиля (dev/test/prod).
+                Если не передано, пытается считать из переменной окружения `CONFIG_PROFILE`.
+                По умолчанию используется `dev`.
         """
         if profile is None:
             profile_str = os.getenv("CONFIG_PROFILE", "dev").lower()
@@ -45,10 +47,16 @@ class ConfigManager:
 
     @staticmethod
     def _load_yaml(path: str) -> dict:
-        """Загружает YAML-файл с подстановкой переменных окружения.
+        """Загружает YAML-файл с поддержкой подстановки переменных окружения.
 
-        Если файл не найден, возвращает пустой словарь. Выполняется простая
-        подстановка `${VAR}` на значения из окружения перед парсингом YAML.
+        Считывает файл и заменяет конструкции вида `${VAR_NAME}` на значения
+        соответствующих переменных окружения перед парсингом YAML.
+
+        Args:
+            path (str): Путь к YAML-файлу.
+
+        Returns:
+            dict: Словарь с загруженными данными или пустой словарь, если файл не найден.
         """
         if not Path(path).exists():
             return {}
@@ -64,15 +72,15 @@ class ConfigManager:
 
     @staticmethod
     def _merge_dicts(base: dict, override: dict, deep: bool = True) -> dict:
-        """Делает слияние двух словарей, где `override` имеет приоритет.
+        """Выполняет слияние двух словарей.
 
         Args:
-            base: Базовый словарь.
-            override: Словарь с переопределениями (приоритетнее).
-            deep: Если True, выполняется глубокое слияние для вложенных словарей.
+            base (dict): Базовый словарь.
+            override (dict): Словарь с переопределениями (имеет приоритет).
+            deep (bool): Если True, выполняется рекурсивное слияние вложенных словарей.
 
         Returns:
-            Новый словарь, полученный после слияния.
+            dict: Новый словарь, являющийся результатом слияния.
         """
         result = base.copy()
 
@@ -90,14 +98,17 @@ class ConfigManager:
         return result
 
     def load_config(self) -> AppConfig:
-        """Загружает и валидированно формирует объект конфигурации.
+        """Загружает конфигурацию с учетом иерархии приоритетов.
 
-        Последовательность приоритетов (от высокого к низкому):
-        1. Переменные окружения (текущий профиль через `CONFIG_PROFILE`)
-        2. Профильный файл (например `params.dev.yaml`)
-        3. Базовый файл `params.yaml`.
+        Последовательность загрузки:
+        1. Базовый файл `params.yaml`.
+        2. Файл профиля (например, `config/params.dev.yaml`), который переопределяет базовые значения.
 
-        Возвращает валидированный объект `AppConfig`.
+        Returns:
+            AppConfig: Валидированный Pydantic-объект конфигурации.
+
+        Raises:
+            FileNotFoundError: Если базовый файл конфигурации не найден.
         """
         # Load base configuration
         base_params = self._load_yaml(self.BASE_CONFIG)
@@ -125,20 +136,28 @@ class ConfigManager:
         return config
 
     def get_config(self) -> AppConfig:
-        """Возвращает загруженную конфигурацию, загрузив при необходимости.
+        """Возвращает текущую загруженную конфигурацию.
 
-        Если конфигурация ещё не была загружена, выполняется `load_config()`.
-        Возвращает объект `AppConfig`.
+        Если конфигурация еще не была загружена, вызывает `load_config()`.
+
+        Returns:
+            AppConfig: Объект конфигурации.
         """
         if self._config is None:
             self.load_config()
         return self._config
 
     def compose_configs(self, *configs: AppConfig) -> AppConfig:
-        """Компонует несколько `AppConfig` в один.
+        """Компонует несколько объектов конфигурации в один.
 
-        Более поздние конфигурации переопределяют поля более ранних. Результат
-        будет иметь профиль, соответствующий текущему менеджеру.
+        Аргументы обрабатываются последовательно: каждая следующая конфигурация
+        переопределяет значения предыдущей.
+
+        Args:
+            *configs: Переменное количество объектов AppConfig для слияния.
+
+        Returns:
+            AppConfig: Результирующий объединенный объект конфигурации.
         """
         if not configs:
             return self.get_config()
@@ -152,13 +171,14 @@ class ConfigManager:
         return result
 
     def override_model_params(self, model_name: str, **params) -> AppConfig:
-        """Предопределяет параметры конкретной модели в конфигурации.
+        """Переопределяет параметры конкретной модели "на лету".
 
         Args:
-            model_name: Имя модели для изменения параметров.
-            **params: Параметры модели, которые будут добавлены/заменены.
+            model_name (str): Имя модели (например, "RandomForest").
+            **params: Именованные аргументы с новыми параметрами модели.
 
-        Возвращает обновлённый объект `AppConfig`.
+        Returns:
+            AppConfig: Обновленный объект конфигурации.
         """
         config = self.get_config()
         models_data = config.models.model_dump(exclude_none=True)
@@ -172,9 +192,19 @@ class ConfigManager:
         return config
 
     def to_dict(self) -> dict:
+        """Преобразует текущую конфигурацию в словарь.
+
+        Returns:
+            dict: Словарь со всеми параметрами конфигурации.
+        """
         return self.get_config().model_dump(mode="json")
 
     def to_yaml(self) -> str:
+        """Преобразует текущую конфигурацию в строку формата YAML.
+
+        Returns:
+            str: Строковое представление конфигурации в YAML.
+        """
         return yaml.dump(self.to_dict(), default_flow_style=False)
 
 
@@ -183,12 +213,13 @@ _config_manager: Optional[ConfigManager] = None
 
 
 def initialize_config(profile: Optional[ConfigProfile] = None) -> AppConfig:
-    """Инициализирует глобальный менеджер конфигурации и загрузить конфиг.
+    """Инициализирует глобальный менеджер конфигурации.
 
     Args:
-        profile: Необязательный профиль для инициализации менеджера.
+        profile (Optional[ConfigProfile]): Профиль конфигурации для инициализации.
 
-    Возвращает загруженный `AppConfig`.
+    Returns:
+        AppConfig: Загруженная конфигурация.
     """
     global _config_manager
     _config_manager = ConfigManager(profile)
@@ -196,7 +227,13 @@ def initialize_config(profile: Optional[ConfigProfile] = None) -> AppConfig:
 
 
 def get_config_manager() -> ConfigManager:
-    """Возвращает глобальный экземпляр `ConfigManager`. Инициализирует при необходимости."""
+    """Возвращает глобальный экземпляр менеджера конфигурации.
+
+    Если менеджер не существует, создает новый и загружает конфигурацию.
+
+    Returns:
+        ConfigManager: Экземпляр менеджера.
+    """
     global _config_manager
     if _config_manager is None:
         _config_manager = ConfigManager()
@@ -205,5 +242,9 @@ def get_config_manager() -> ConfigManager:
 
 
 def get_config() -> AppConfig:
-    """Получает глобальную конфигурацию приложения."""
+    """Утилита для быстрого доступа к глобальной конфигурации.
+
+    Returns:
+        AppConfig: Текущая конфигурация приложения.
+    """
     return get_config_manager().get_config()

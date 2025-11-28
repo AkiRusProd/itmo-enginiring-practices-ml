@@ -1,3 +1,9 @@
+"""
+Модуль логирования результатов и уведомлений.
+
+Обеспечивает запись логов в файлы и консоль, а также отправку уведомлений
+и отчетов в Telegram через бота.
+"""
 import json
 import logging
 from datetime import datetime
@@ -11,10 +17,19 @@ tg_notifier = TelegramBotNotifier()
 
 
 class PipelineLogger:
-    """Логирование выполнения пайплайна."""
+    """Класс для логирования событий выполнения пайплайна.
+
+    Настраивает вывод логов одновременно в файл и в консоль.
+    При возникновении ошибок отправляет критические уведомления в Telegram.
+    """
 
     def __init__(self, name: str = "pipeline", log_dir: Path = LOG_DIR):
-        """Инициализация логгера."""
+        """Инициализирует логгер.
+
+        Args:
+            name (str): Имя логгера (используется в префиксе файла лога).
+            log_dir (Path): Директория для сохранения файлов логов.
+        """
         self.name = name
         self.log_dir = Path(log_dir)
         self.log_dir.mkdir(parents=True, exist_ok=True)
@@ -42,20 +57,36 @@ class PipelineLogger:
         self.log_file = log_file
 
     def info(self, message: str) -> None:
-        """Записывает информационное сообщение в лог."""
+        """Записывает информационное сообщение.
+
+        Args:
+            message (str): Текст сообщения.
+        """
         self.logger.info(message)
 
     def error(self, message: str) -> None:
-        """Логирует ошибку и шлет алерт в ТГ."""
+        """Логирует ошибку и отправляет уведомление в Telegram.
+
+        Args:
+            message (str): Текст сообщения об ошибке.
+        """
         self.logger.error(message)
         tg_notifier.send_message(f"🚨 <b>CRITICAL ERROR ({self.name})</b>\n\n{message}")
 
     def warning(self, message: str) -> None:
-        """Записывает предупреждение в лог."""
+        """Записывает предупреждение.
+
+        Args:
+            message (str): Текст предупреждения.
+        """
         self.logger.warning(message)
 
     def debug(self, message: str) -> None:
-        """Записывает отладочное сообщение в лог."""
+        """Записывает отладочное сообщение.
+
+        Args:
+            message (str): Текст отладки.
+        """
         self.logger.debug(message)
 
 
@@ -65,7 +96,14 @@ def log_results(
     metrics: Optional[Dict[str, Any]] = None,
     log_dir: Path = LOG_DIR,
 ) -> None:
-    """Логирование результатов и отправка в Telegram."""
+    """Логирует результат этапа и отправляет отчет в Telegram.
+
+    Args:
+        status (str): Статус выполнения ('success' или 'failed').
+        message (str): Описание результата или ошибки.
+        metrics (Optional[Dict[str, Any]]): Словарь с метриками для отображения.
+        log_dir (Path): Директория для сохранения общего лога результатов.
+    """
     log_dir = Path(log_dir)
     log_dir.mkdir(parents=True, exist_ok=True)
 
@@ -102,7 +140,14 @@ def log_results(
 
 
 def print_results(metrics_file: Path = METRICS_FILE) -> None:
-    """Вывести результаты и отправить сводку в Telegram."""
+    """Выводит итоговую сводку результатов обучения.
+
+    Считывает файл с метриками лучшей модели и отправляет красивый отчет
+    (Leaderboard) в Telegram и в консоль.
+
+    Args:
+        metrics_file (Path): Путь к файлу `metrics.json`.
+    """
     metrics_file_path = Path(metrics_file)
 
     if not metrics_file_path.exists():

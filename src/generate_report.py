@@ -1,3 +1,9 @@
+"""
+Модуль генерации отчетов об экспериментах.
+
+Отвечает за сбор метрик всех обученных моделей, создание визуализаций (графики
+сравнения, матрица ошибок) и генерацию итогового Markdown-файла с отчетом.
+"""
 import glob
 import json
 from datetime import datetime
@@ -18,7 +24,14 @@ IMAGES_DIR.mkdir(parents=True, exist_ok=True)
 
 
 def load_metrics():
-    """Загружает метрики всех обученных моделей."""
+    """Считывает метрики всех моделей из JSON-файлов.
+
+    Сканирует директорию `metrics/train_models/`, загружает данные из каждого
+    файла и собирает их в единый DataFrame.
+
+    Returns:
+        pd.DataFrame: Таблица с полями Model, F1 Score, Timestamp, Profile.
+    """
     files = glob.glob(str(METRICS_DIR / "train_models" / "*_metrics.json"))
     data = []
 
@@ -38,7 +51,15 @@ def load_metrics():
 
 
 def load_best_metrics():
-    """Загружает расширенные метрики лучшей модели."""
+    """Загружает детальные метрики лучшей модели.
+
+    Считывает файл `metrics/best_model_advanced_metrics.json`, созданный
+    на этапе оценки.
+
+    Returns:
+        dict: Словарь с метриками (accuracy, precision, recall, f1, confusion_matrix)
+        или None, если файл не найден.
+    """
     path = METRICS_DIR / "best_model_advanced_metrics.json"
     if not path.exists():
         return None
@@ -47,7 +68,14 @@ def load_best_metrics():
 
 
 def plot_model_comparison(df):
-    """Строит вертикальный бар-чарт сравнения моделей по F1 Score."""
+    """Строит и сохраняет график сравнения моделей по F1 Score.
+
+    Args:
+        df (pd.DataFrame): Датафрейм с метриками моделей.
+
+    Returns:
+        str: Относительный путь к сохраненному изображению или None, если данных нет.
+    """
     if df.empty:
         return None
 
@@ -92,7 +120,14 @@ def plot_model_comparison(df):
 
 
 def plot_confusion_matrix(matrix):
-    """Строит тепловую карту матрицы ошибок."""
+    """Визуализирует и сохраняет матрицу ошибок.
+
+    Args:
+        matrix (list): Список списков (2x2), представляющий матрицу ошибок.
+
+    Returns:
+        str: Относительный путь к сохраненному изображению.
+    """
     if not matrix:
         return None
 
@@ -119,6 +154,19 @@ def plot_confusion_matrix(matrix):
 
 
 def generate_markdown(df, best_metrics, comparison_img, cm_img):
+    """Формирует текст отчета в формате Markdown.
+
+    Собирает воедино таблицы с метриками, ссылки на изображения и текстовые описания.
+
+    Args:
+        df (pd.DataFrame): Таблица сравнения моделей.
+        best_metrics (dict): Метрики лучшей модели.
+        comparison_img (str): Путь к графику сравнения.
+        cm_img (str): Путь к изображению матрицы ошибок.
+
+    Returns:
+        str: Полный текст отчета в формате Markdown.
+    """
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M")
 
     md = "# Experiment Report\n\n"
@@ -157,6 +205,7 @@ def generate_markdown(df, best_metrics, comparison_img, cm_img):
 
 
 def main():
+    """Основная функция запуска генерации отчета."""
     print("Generating report with visualizations...")
     df = load_metrics()
     best_metrics = load_best_metrics()

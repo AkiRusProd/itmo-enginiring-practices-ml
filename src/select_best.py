@@ -1,3 +1,10 @@
+"""
+Модуль выбора лучшей модели.
+
+Скрипт анализирует сохраненные метрики (JSON) всех обученных кандидатов,
+выбирает модель с наивысшим F1-score, копирует её файл как `best_model.pkl`
+и регистрирует в ClearML как Production-модель.
+"""
 import glob
 import json
 from pathlib import Path
@@ -13,9 +20,20 @@ from schemas import BestModelMetrics, TrainMetrics
 
 
 def select_best_model():
-    """
-    Анализирует метрики обученных моделей, выбирает лучшую,
-    создает артефакт 'best_model.pkl' и регистрирует его в ClearML.
+    """Выполняет процедуру выбора лучшей модели.
+
+    1. Сканирует файлы метрик в `metrics/train_models/`.
+    2. Сравнивает модели по F1-score.
+    3. Формирует и отправляет таблицу сравнения (Leaderboard) в ClearML.
+    4. Копирует файл лучшей модели в `models/best_model.pkl`.
+    5. Регистрирует лучшую модель в Model Registry ClearML с тегом 'champion'.
+
+    Returns:
+        str: Название лучшей модели.
+
+    Raises:
+        FileNotFoundError: Если метрики обучения не найдены.
+        ValueError: Если не удалось определить лучшую модель.
     """
     # Инициализация локального логгера
     pipeline_logger = PipelineLogger("select_best")

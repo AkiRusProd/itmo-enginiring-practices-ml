@@ -1,4 +1,4 @@
-"""Pydantic schemas for configuration and metrics validation."""
+"""Pydantic схемы для валидации конфигурации и метрик."""
 
 from datetime import datetime
 from enum import Enum
@@ -8,7 +8,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class ConfigProfile(str, Enum):
-    """Configuration profiles for different environments."""
+    """Перечисление доступных профилей конфигурации (окружений)."""
 
     DEV = "dev"
     TEST = "test"
@@ -16,7 +16,7 @@ class ConfigProfile(str, Enum):
 
 
 class TrainConfig(BaseModel):
-    """Training configuration."""
+    """Схема конфигурации параметров обучения."""
 
     seed: int = Field(42, description="Random seed for reproducibility")
     test_size: float = Field(0.2, description="Test set size")
@@ -24,17 +24,14 @@ class TrainConfig(BaseModel):
     @field_validator("test_size")
     @classmethod
     def validate_test_size(cls, v):
-        """Валидатор для поля `test_size`.
-
-        Проверяет, что значение лежит в интервале (0, 1).
-        """
+        """Проверяет, что размер тестовой выборки находится в диапазоне (0, 1)."""
         if not 0 < v < 1:
             raise ValueError("test_size must be between 0 and 1")
         return v
 
 
 class ModelConfig(BaseModel):
-    """Base model configuration."""
+    """Базовая схема конфигурации одной модели."""
 
     model_class: str = Field(..., description="Model class name")
 
@@ -42,14 +39,21 @@ class ModelConfig(BaseModel):
 
 
 class ModelsConfig(BaseModel):
-    """Container for all model configurations."""
+    """Контейнер для конфигураций всех используемых моделей."""
 
     model_config = ConfigDict(extra="allow")
 
     def merge(self, other: "ModelsConfig") -> "ModelsConfig":
-        """Объединяет с другим `ModelsConfig`, где `other` имеет приоритет.
+        """Объединяет текущую конфигурацию моделей с другой.
 
-        Возвращает новый `ModelsConfig` с объединёнными параметрами.
+        Принимает другой объект ModelsConfig, который имеет приоритет
+        (override). Возвращает новый объект с объединенными параметрами.
+
+        Args:
+            other (ModelsConfig): Конфигурация для слияния (приоритетная).
+
+        Returns:
+            ModelsConfig: Результат слияния.
         """
         merged_data = self.model_dump(exclude_none=True)
         merged_data.update(other.model_dump(exclude_none=True))
@@ -57,7 +61,7 @@ class ModelsConfig(BaseModel):
 
 
 class AppConfig(BaseModel):
-    """Application configuration."""
+    """Главная схема конфигурации всего приложения."""
 
     profile: ConfigProfile = Field(
         ConfigProfile.DEV, description="Configuration profile (dev/test/prod)"
@@ -91,10 +95,16 @@ class AppConfig(BaseModel):
     model_config = ConfigDict(extra="allow")
 
     def merge(self, other: "AppConfig") -> "AppConfig":
-        """Объяединяет текущую конфигурацию с другой `AppConfig`.
+        """Объединяет текущую конфигурацию с другой (deep merge).
 
-        Поля из `other` переопределяют соответствующие поля текущей конфигурации.
-        Выполняется глубокое слияние для вложенных структур (`train`, `models`).
+        Реализует глубокое слияние вложенных структур (train, models).
+        Значения из `other` переопределяют текущие значения.
+
+        Args:
+            other (AppConfig): Конфигурация для слияния.
+
+        Returns:
+            AppConfig: Объединенная конфигурация.
         """
         merged_data = self.model_dump()
         other_data = other.model_dump()
@@ -117,7 +127,7 @@ class AppConfig(BaseModel):
 
 
 class TrainMetrics(BaseModel):
-    """Metrics from single model training."""
+    """Схема метрик обучения одной модели."""
 
     model: str = Field(..., description="Model name")
     f1_score: float = Field(..., description="F1 score")
@@ -130,7 +140,7 @@ class TrainMetrics(BaseModel):
 
 
 class EvalMetrics(BaseModel):
-    """Advanced evaluation metrics."""
+    """Схема расширенных метрик оценки лучшей модели."""
 
     accuracy: float = Field(..., description="Accuracy score")
     precision: float = Field(..., description="Precision score")
@@ -140,7 +150,7 @@ class EvalMetrics(BaseModel):
 
 
 class BestModelMetrics(BaseModel):
-    """Best model selection metrics."""
+    """Схема сводных метрик выбора лучшей модели."""
 
     best_model: str = Field(..., description="Best model name")
     best_f1_score: float = Field(..., description="Best model f1 score")

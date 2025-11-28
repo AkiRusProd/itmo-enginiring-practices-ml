@@ -1,3 +1,9 @@
+"""
+Модуль вспомогательных утилит.
+
+Содержит функции для сохранения/загрузки моделей через pickle и
+инструменты для логирования экспериментов в TensorBoard.
+"""
 import pickle  # nosec
 from contextlib import contextmanager
 from functools import wraps
@@ -9,13 +15,14 @@ from base_config import TB_LOG_DIR
 
 
 def save_model(model, path):
-    """Сохраняет объект модели в файл через pickle.
+    """Сохраняет объект модели в файл.
 
-    Создаёт родительские директории при необходимости и сериализует
-    объект модели в указанный путь.
+    Сериализует объект модели с помощью `pickle` и сохраняет по указанному пути.
+    Автоматически создает родительские директории, если они не существуют.
+
     Args:
-        model: Объект модели (scikit-learn или подобный) для сохранения.
-        path: Путь к файлу, куда будет записана модель.
+        model (object): Объект модели (scikit-learn или подобный) для сохранения.
+        path (str): Путь к файлу (включая имя файла и расширение .pkl).
     """
     Path(path).parent.mkdir(parents=True, exist_ok=True)
     with open(path, "wb") as f:
@@ -23,13 +30,13 @@ def save_model(model, path):
 
 
 def load_model(path):
-    """Загружает сериализованную модель из файла.
+    """Загружает модель из pickle-файла.
 
     Args:
-        path: Путь к файлу с сериализованной моделью.
+        path (str): Путь к файлу модели.
 
     Returns:
-        Десериализованный объект модели.
+        object: Десериализованный объект модели.
     """
     with open(path, "rb") as f:
         return pickle.load(f)  # nosec
@@ -37,13 +44,17 @@ def load_model(path):
 
 @contextmanager
 def experiment(exp_name, log_dir=TB_LOG_DIR):
-    """Контекстный менеджер для записи логов эксперимента в TensorBoard.
+    """Контекстный менеджер для работы с TensorBoard.
+
+    Создает `SummaryWriter` при входе в контекст и автоматически закрывает его
+    при выходе.
 
     Args:
-        exp_name: Имя эксперимента (используется в пути логов).
-        log_dir: Базовая директория для логов TensorBoard.
+        exp_name (str): Уникальное имя эксперимента (создает подпапку).
+        log_dir (str): Базовая директория для логов.
 
-    Возвращает объект `SummaryWriter`.
+    Yields:
+        SummaryWriter: Объект для записи логов.
     """
     writer = SummaryWriter(log_dir=f"{log_dir}/{exp_name}")
     try:
@@ -53,11 +64,14 @@ def experiment(exp_name, log_dir=TB_LOG_DIR):
 
 
 def log_experiment():
-    """Декоратор для автоматического создания и передачи `SummaryWriter`.
+    """Декоратор для автоматического логирования экспериментов.
 
-    Возвращает декоратор, который ожидает в вызове аргумент `exp_name` и
-    необязательный `log_dir`. Создаёт контекст эксперимента и передаёт
-    `writer` в целевую функцию как именованный аргумент.
+    Оборачивает функцию, требующую логирования. Извлекает из именованных
+    аргументов вызова параметры `exp_name` и `log_dir`, инициализирует
+    SummaryWriter и передает его в декорируемую функцию аргументом `writer`.
+
+    Returns:
+        Callable: Декорированная функция.
     """
 
     def decorator(func):
@@ -67,7 +81,7 @@ def log_experiment():
         def wrapper(*args, **kwargs):
             """Wrapper: извлекает параметры логирования и вызывает функцию.
 
-            Ожидает в `kwargs` ключ `exp_name`. Передаёт `writer` в вызов.
+            Ожидает в `kwargs` наличие ключа `exp_name`.
             """
 
             exp_name = kwargs.pop("exp_name")
