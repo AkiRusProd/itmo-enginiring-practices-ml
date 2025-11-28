@@ -22,7 +22,7 @@
     *   🚂 **Training:** `src.train_single`, `src.train`
     *   🏆 **Selection & Eval:** `src.select_best`, `src.eval`
     *   ⚙️ **Utilities:** `src.utils`, `src.result_logger`, `src.tg_bot_notifier`
-*   **Руководства:** Написаны `Quick Start`, `Deployment Guide` и описание системы конфигурации.
+*   **Руководства:** Написан `Quick Start` и описание системы конфигурации.
 
 ### 2. ✅ Публикация в GitHub Pages (3 балла)
 *   **CI/CD:** Настроен GitHub Actions workflow `.github/workflows/gh-pages.yml`.
