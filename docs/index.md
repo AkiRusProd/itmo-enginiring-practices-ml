@@ -180,10 +180,20 @@ Directory structure:
 
 ## 🛠 Разработка
 
-*   **Linting:** `make lint` (использует ruff)
-*   **Format:** `make format`
-*   **Testing:** `make test`
-*   **Adding Docs:** Создайте новый `.md` файл в `docs/` и добавьте его в `nav` в `mkdocs.yml`.
+В проекте используется **Poetry** для управления зависимостями и **pre-commit** для обеспечения качества кода (Black, Isort, Ruff, Mypy, Bandit).
+
+*   **Setup:**
+    ```bash
+    # Установка хуков (один раз)
+    pre-commit install
+    ```
+*   **Code Quality (Lint & Format):**
+    Запуск всех проверок (Black, Isort, Ruff, Mypy, Bandit) вручную:
+    ```bash
+    pre-commit run --all-files
+    ```
+*   **Documentation:**
+    Создайте новый `.md` файл в `docs/` и добавьте ссылку на него в секцию `nav` файла `mkdocs.yml`.
 
 ## License
 
