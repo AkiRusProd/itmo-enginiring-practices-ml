@@ -2,6 +2,7 @@ site_name: MLOps Pipeline Documentation
 site_description: Documentation for HW5 MLOps Project
 site_author: AkirusProd
 repo_url: https://github.com/AkiRusProd/itmo-enginiring-practices-ml
+site_url: https://akirusprod.github.io/itmo-enginiring-practices-ml
 repo_name: HW5_MLOps
 
 theme:
