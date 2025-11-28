@@ -1,0 +1,1386 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation for HW6 Engineering Practices Project">
+      
+      
+        <meta name="author" content="AkirusProd">
+      
+      
+        <link rel="canonical" href="https://akirusprod.github.io/itmo-enginiring-practices-ml/">
+      
+      
+      
+        <link rel="next" href="quickstart/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>MLOps Pipeline Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#itmo-engineering-practices-course-titanic-classification-pipeline" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="." title="MLOps Pipeline Documentation" class="md-header__button md-logo" aria-label="MLOps Pipeline Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            MLOps Pipeline Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Home
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/AkiRusProd/itmo-enginiring-practices-ml" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Engineering Practices
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="MLOps Pipeline Documentation" class="md-nav__button md-logo" aria-label="MLOps Pipeline Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    MLOps Pipeline Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/AkiRusProd/itmo-enginiring-practices-ml" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Engineering Practices
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="." class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📋 Отчет по ДЗ 6: Документация и отчеты
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📋 Отчет по ДЗ 6: Документация и отчеты">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. ✅ Техническая документация (2 балла)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-github-pages-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. ✅ Публикация в GitHub Pages (3 балла)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. ✅ Отчеты об экспериментах (2 балла)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. ✅ Воспроизводимость (1 балл)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reproducibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 Быстрый старт (Reproducibility)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Быстрый старт (Reproducibility)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Клонирование и установка
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Настройка окружения
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Запуск пайплайна
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Просмотр документации локально
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📂 Структура проекта
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📊 Пример генерируемых отчетов
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🛠 Разработка
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#license" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        License
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Experiments
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Experiments
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="experiments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="reference/config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="reference/data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Processing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="reference/train/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="reference/select/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Selection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="reference/eval/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluation & Report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="reference/pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="reference/utilities/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Utilities & Logs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📋 Отчет по ДЗ 6: Документация и отчеты
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📋 Отчет по ДЗ 6: Документация и отчеты">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. ✅ Техническая документация (2 балла)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-github-pages-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. ✅ Публикация в GitHub Pages (3 балла)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. ✅ Отчеты об экспериментах (2 балла)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. ✅ Воспроизводимость (1 балл)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reproducibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 Быстрый старт (Reproducibility)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Быстрый старт (Reproducibility)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Клонирование и установка
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Настройка окружения
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Запуск пайплайна
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Просмотр документации локально
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📂 Структура проекта
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📊 Пример генерируемых отчетов
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🛠 Разработка
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#license" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        License
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="itmo-engineering-practices-course-titanic-classification-pipeline">ITMO Engineering Practices Course: Titanic Classification Pipeline</h1>
+<p><a href="https://www.python.org/downloads/"><img alt="Python 3.10+" src="https://img.shields.io/badge/python-3.10+-blue.svg" /></a>
+<a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg" /></a>
+<a href="https://dvc.org/"><img alt="DVC" src="https://img.shields.io/badge/DVC-Data%20Version%20Control-9cf" /></a>
+<a href="https://clear.ml/"><img alt="ClearML" src="https://img.shields.io/badge/ClearML-Experiment%20Tracking-202a44" /></a></p>
+<p><strong>Проектная работа в рамках курса Engineering Practices for ML (ITMO).</strong>
+Полноценный пайплайн машинного обучения для классификации датасета Titanic с использованием DVC, ClearML, Pydantic, Docker и автоматической генерацией отчетности.</p>
+<hr />
+<h2 id="6">📋 Отчет по ДЗ 6: Документация и отчеты</h2>
+<p>В этом релизе полностью реализованы требования домашнего задания №6.</p>
+<h3 id="1-2">1. ✅ Техническая документация (2 балла)</h3>
+<ul>
+<li><strong>Инструмент:</strong> Использован <strong>MkDocs</strong> с темой Material.</li>
+<li><strong>Полный API Reference:</strong> Настроена автоматическая генерация документации из docstrings для <strong>всех</strong> модулей проекта с помощью <code>mkdocstrings</code>:<ul>
+<li>🛠 <strong>Configuration:</strong> <code>src.config_manager</code>, <code>src.schemas</code></li>
+<li>🧹 <strong>Data Processing:</strong> <code>src.preprocess</code></li>
+<li>🚂 <strong>Training:</strong> <code>src.train_single</code>, <code>src.train</code></li>
+<li>🏆 <strong>Selection &amp; Eval:</strong> <code>src.select_best</code>, <code>src.eval</code></li>
+<li>⚙️ <strong>Utilities:</strong> <code>src.utils</code>, <code>src.result_logger</code>, <code>src.tg_bot_notifier</code></li>
+</ul>
+</li>
+<li><strong>Руководства:</strong> Написан <code>Quick Start</code> и описание системы конфигурации.</li>
+</ul>
+<h3 id="2-github-pages-3">2. ✅ Публикация в GitHub Pages (3 балла)</h3>
+<ul>
+<li><strong>CI/CD:</strong> Настроен GitHub Actions workflow <code>.github/workflows/gh-pages.yml</code>.</li>
+<li><strong>Автоматизация:</strong> При пуше в ветку <code>main</code> происходит:<ol>
+<li>Установка зависимостей.</li>
+<li>Генерация актуального отчета (<code>src/generate_report.py</code>).</li>
+<li>Сборка сайта MkDocs.</li>
+<li>Деплой артефактов в ветку <code>gh-pages</code>.</li>
+</ol>
+</li>
+<li><strong>Результат:</strong> Документация доступна онлайн (см. Environment URL в репозитории).</li>
+</ul>
+<h3 id="3-2">3. ✅ Отчеты об экспериментах (2 балла)</h3>
+<ul>
+<li><strong>Генерация:</strong> Реализован скрипт <code>src/generate_report.py</code>, который парсит JSON-метрики.</li>
+<li><strong>Визуализация:</strong><ul>
+<li>📊 <strong>Leaderboard:</strong> Сравнительная таблица всех обученных моделей (сортировка по F1).</li>
+<li>📈 <strong>Plots:</strong> График сравнения метрик F1 Score для всех кандидатов.</li>
+<li>🟦 <strong>Confusion Matrix:</strong> Визуализация ошибок для Production-модели.</li>
+</ul>
+</li>
+<li><strong>Интеграция:</strong> Отчет генерируется автоматически при запуске пайплайна и встраивается в страницу <a href="experiments/">Experiment Report</a>.</li>
+</ul>
+<h3 id="4-1">4. ✅ Воспроизводимость (1 балл)</h3>
+<ul>
+<li><strong>Инструкции:</strong> Полное описание установки, настройки окружения и запуска приведено ниже.</li>
+<li><strong>DVC:</strong> Весь пайплайн (препроцессинг -&gt; обучение -&gt; выбор -&gt; оценка -&gt; отчет) запускается одной командой <code>dvc repro</code>.</li>
+<li><strong>ClearML</strong> Второй вариант: запуск пайплайна через ClearML: <code>python src/pipeline_controller.py</code></li>
+<li><strong>Docker:</strong> Настроена среда ClearML через <code>docker-compose</code>.</li>
+</ul>
+<hr />
+<h2 id="reproducibility">🚀 Быстрый старт (Reproducibility)</h2>
+<p>Для воспроизведения результатов выполните следующие шаги:</p>
+<h3 id="1">1. Клонирование и установка</h3>
+<pre><code class="language-bash">git clone https://github.com/AkiRusProd/itmo-enginiring-practices-ml.git
+cd itmo-enginiring-practices-ml
+
+# Создание виртуального окружения
+python3 -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+
+# Установка зависимостей (pip или poetry)
+pip install -r requirements.txt
+# или
+poetry install
+</code></pre>
+<h3 id="2">2. Настройка окружения</h3>
+<p>Создайте файл <code>.env</code> в корне проекта (см. <code>.env.example</code>). Это необходимо для интеграции с ClearML и уведомлений в Telegram.</p>
+<h3 id="3">3. Запуск пайплайна</h3>
+<p>Используйте DVC для запуска полного цикла воспроизведения:</p>
+<pre><code class="language-bash">dvc repro
+</code></pre>
+<p>После успешного выполнения:
+1.  Лучшая модель будет сохранена в <code>models/best_model.pkl</code>.
+2.  Метрики появятся в папке <code>metrics/</code>.
+3.  <strong>Отчет с графиками</strong> будет сгенерирован в <code>docs/experiments.md</code>.</p>
+<h3 id="4">4. Просмотр документации локально</h3>
+<p>Чтобы увидеть сгенерированный отчет и API документацию:</p>
+<pre><code class="language-bash">mkdocs serve
+</code></pre>
+<p>Перейдите по адресу <code>http://127.0.0.1:8000</code>.</p>
+<hr />
+<h2 id="_1">📂 Структура проекта</h2>
+<pre><code class="language-text">Directory structure:
+├── .github/
+│   └── workflows/
+│       └── gh-pages.yml       # CI/CD: Сборка и деплой документации
+├── config/                    # Система конфигурации (Hydra-like)
+│   ├── params.dev.yaml        # Профиль разработки
+│   ├── params.prod.yaml       # Профиль продакшена
+│   └── params.test.yaml       # Профиль тестирования
+├── data/
+│   ├── processed/             # Обработанные данные
+│   └── raw/
+│       └── dataset.csv.dvc    # Исходные данные под DVC
+├── docs/                      # Документация проекта (MkDocs)
+│   ├── assets/images/         # Сгенерированные графики для отчетов
+│   ├── reference/             # API Reference (автогенерация)
+│   │   ├── config.md          # Док: Конфигурация
+│   │   ├── data.md            # Док: Обработка данных
+│   │   ├── eval.md            # Док: Оценка и отчетность
+│   │   ├── pipeline.md        # Док: Пайплайн контроллер
+│   │   ├── select.md          # Док: Выбор модели
+│   │   ├── train.md           # Док: Обучение
+│   │   └── utilities.md       # Док: Утилиты и логирование
+│   ├── deployment.md
+│   ├── experiments.md         # Автоматически генерируемый отчет
+│   ├── index.md               # Главная страница
+│   ├── mkdocs.yml             # Конфиг вложенной документации
+│   └── quickstart.md
+├── examples/
+│   └── config_composition_examples.py
+├── metrics/                   # Метрики экспериментов (JSON)
+│   ├── best_model_advanced_metrics.json
+│   ├── best_model_metrics.json
+│   └── train_models/          # Метрики каждой отдельной модели
+├── models/                    # Сериализованные модели (.pkl)
+├── notebooks/
+├── src/                       # Исходный код
+│   ├── __init__.py
+│   ├── base_config.py         # Инициализация конфига
+│   ├── config_manager.py      # Менеджер конфигурации и профилей
+│   ├── eval.py                # Оценка лучшей модели
+│   ├── generate_report.py     # Генерация Markdown отчета
+│   ├── pipeline_controller.py # Оркестрация ClearML пайплайна
+│   ├── preprocess.py          # Очистка и подготовка данных
+│   ├── result_logger.py       # Логирование в файл/консоль
+│   ├── schemas.py             # Pydantic схемы валидации
+│   ├── select_best.py         # Выбор лучшей модели (Champion)
+│   ├── tg_bot_notifier.py     # Telegram-бот для уведомлений
+│   ├── train.py               # Скрипт массового обучения (Legacy)
+│   ├── train_single.py        # Обучение одной модели (шаг пайплайна)
+│   └── utils.py               # Общие утилиты
+├── tests/
+│   └── test_data.py
+├── .dvcignore
+├── .env.example               # Пример переменных окружения
+├── .pre-commit-config.yaml
+├── docker-compose.clearml.yml # Развертывание ClearML
+├── Dockerfile
+├── dvc.yaml                   # DVC Pipeline (DAG)
+├── LICENSE
+├── Makefile                   # Команды автоматизации (lint, format)
+├── mkdocs.yml                 # Основной конфиг MkDocs
+├── params.yaml                # Базовые параметры эксперимента
+├── pyproject.toml             # Зависимости Poetry
+└── requirements.txt           # Зависимости pip
+</code></pre>
+<hr />
+<h2 id="_2">📊 Пример генерируемых отчетов</h2>
+<p>Скрипт анализа автоматически строит графики, которые попадают в документацию:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Сравнение моделей (F1 Score)</th>
+<th style="text-align: center;">Матрица ошибок (Best Model)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><img alt="Comparison" src="assets/images/model_comparison.png" /></td>
+<td style="text-align: center;"><img alt="Confusion Matrix" src="assets/images/confusion_matrix.png" /></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_3">🛠 Разработка</h2>
+<p>В проекте используется <strong>Poetry</strong> для управления зависимостями и <strong>pre-commit</strong> для обеспечения качества кода (Black, Isort, Ruff, Mypy, Bandit).</p>
+<ul>
+<li><strong>Setup:</strong>
+    <code>bash
+    # Установка хуков (один раз)
+    pre-commit install</code></li>
+<li><strong>Code Quality (Lint &amp; Format):</strong>
+    Запуск всех проверок (Black, Isort, Ruff, Mypy, Bandit) вручную:
+    <code>bash
+    pre-commit run --all-files</code></li>
+<li><strong>Documentation:</strong>
+    Создайте новый <code>.md</code> файл в <code>docs/</code> и добавьте ссылку на него в секцию <code>nav</code> файла <code>mkdocs.yml</code>.</li>
+</ul>
+<h2 id="license">License</h2>
+<p>MIT</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.sections", "navigation.expand", "content.code.copy"], "search": "assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>
