@@ -70,7 +70,6 @@ nav:
   - Home: index.md
   - Guide:
       - Quick Start: quickstart.md
-      - Deployment: deployment.md
   - Experiments:
       - Report: experiments.md
   - API Reference:
