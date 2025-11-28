@@ -1,6 +1,6 @@
 # Experiment Report
 
-*Generated on: 2025-11-28 01:43*
+*Generated on: 2025-11-29 00:18*
 
 ## 1. Model Leaderboard
 
@@ -8,22 +8,22 @@
 
 | Model              |   F1 Score | Timestamp                  | Profile   |
 |:-------------------|-----------:|:---------------------------|:----------|
-| GradientBoosting   |   0.808888 | 2025-11-28T01:36:23.313499 | test      |
-| LogisticRegression |   0.806154 | 2025-11-28T01:35:49.840286 | test      |
-| AdaBoost           |   0.805173 | 2025-11-28T01:37:13.339258 | test      |
-| Bagging            |   0.794092 | 2025-11-28T01:37:29.927031 | test      |
-| RandomForest       |   0.78514  | 2025-11-28T01:36:06.799662 | test      |
-| DecisionTree       |   0.761869 | 2025-11-28T01:36:56.087317 | test      |
-| SVC                |   0.613954 | 2025-11-28T01:36:38.652311 | test      |
+| LogisticRegression |   0.811912 | 2025-11-29T00:16:20.640934 | dev       |
+| AdaBoost           |   0.807566 | 2025-11-29T00:16:20.149178 | dev       |
+| GradientBoosting   |   0.795075 | 2025-11-29T00:16:21.908551 | dev       |
+| DecisionTree       |   0.793673 | 2025-11-29T00:16:21.366954 | dev       |
+| SVC                |   0.789341 | 2025-11-29T00:16:25.610875 | dev       |
+| RandomForest       |   0.780917 | 2025-11-29T00:16:21.639516 | dev       |
+| Bagging            |   0.767989 | 2025-11-29T00:16:21.141412 | dev       |
 
 ## 2. Best Model Detailed Evaluation
 
 | Metric | Value |
 |--------|-------|
-| **F1 Score** | 0.8089 |
-| Accuracy | 0.8117 |
-| Precision | 0.8111 |
-| Recall | 0.8117 |
+| **F1 Score** | 0.8119 |
+| Accuracy | 0.8134 |
+| Precision | 0.8127 |
+| Recall | 0.8134 |
 
 ### Confusion Matrix
 
