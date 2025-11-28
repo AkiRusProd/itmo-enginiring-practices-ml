@@ -2,7 +2,7 @@
 
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, Optional
+from typing import Dict, Optional
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
@@ -24,6 +24,10 @@ class TrainConfig(BaseModel):
     @field_validator("test_size")
     @classmethod
     def validate_test_size(cls, v):
+        """Валидатор для поля `test_size`.
+
+        Проверяет, что значение лежит в интервале (0, 1).
+        """
         if not 0 < v < 1:
             raise ValueError("test_size must be between 0 and 1")
         return v
@@ -43,7 +47,10 @@ class ModelsConfig(BaseModel):
     model_config = ConfigDict(extra="allow")
 
     def merge(self, other: "ModelsConfig") -> "ModelsConfig":
-        """Merge with another ModelsConfig, with other taking precedence."""
+        """Объединяет с другим `ModelsConfig`, где `other` имеет приоритет.
+
+        Возвращает новый `ModelsConfig` с объединёнными параметрами.
+        """
         merged_data = self.model_dump(exclude_none=True)
         merged_data.update(other.model_dump(exclude_none=True))
         return ModelsConfig(**merged_data)
@@ -84,7 +91,11 @@ class AppConfig(BaseModel):
     model_config = ConfigDict(extra="allow")
 
     def merge(self, other: "AppConfig") -> "AppConfig":
-        """Merge with another AppConfig, with other taking precedence."""
+        """Объяединяет текущую конфигурацию с другой `AppConfig`.
+
+        Поля из `other` переопределяют соответствующие поля текущей конфигурации.
+        Выполняется глубокое слияние для вложенных структур (`train`, `models`).
+        """
         merged_data = self.model_dump()
         other_data = other.model_dump()
 

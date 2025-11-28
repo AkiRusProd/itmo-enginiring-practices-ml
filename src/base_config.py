@@ -62,12 +62,20 @@ MODELS = {
 
 # For testing and direct access
 def get_config() -> AppConfig:
-    """Get the validated configuration object."""
+    """Получает валидированный объект конфигурации.
+
+    Возвращает текущий загруженный `AppConfig`. Если конфигурация ещё не
+    загружена, она будет загружена через глобальный `ConfigManager`.
+    """
     return get_config_manager().get_config()
 
 
 def reload_config() -> AppConfig:
-    """Reload configuration from files."""
+    """Перезагружает конфигурацию из файлов.
+
+    Выполняет повторное чтение конфигурационных файлов и обновляет глобальную
+    переменную конфигурации `_config`.
+    """
     global _config
     _config = get_config_manager().load_config()
     return _config

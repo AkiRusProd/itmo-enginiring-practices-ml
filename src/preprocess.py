@@ -14,6 +14,15 @@ random.seed(SEED)
 
 
 def preprocess(input_path=RAW_DATA_PATH, output_path=DATA_PATH):
+    """Выполняет предобработку исходных данных и сохранить результат.
+
+    Открывает CSV по `input_path`, заполняет пропуски, кодирует категориальные
+    признаки и сохраняет обработанный датасет в `output_path`.
+
+    Args:
+        input_path: Путь к исходному CSV с сырыми данными.
+        output_path: Путь для сохранения обработанных данных.
+    """
     print("Starting preprocessing...")
     df = pd.read_csv(input_path)
 

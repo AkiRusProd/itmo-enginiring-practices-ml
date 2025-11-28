@@ -1,4 +1,4 @@
-"""Configuration management system with composition, profiles, and environment support."""
+"""Система управления конфигурациями с поддержкой композиции, профилей и переменных окружения."""
 
 import os
 from pathlib import Path
@@ -11,11 +11,11 @@ from schemas import AppConfig, ConfigProfile, ModelsConfig, TrainConfig
 
 class ConfigManager:
     """
-    Configuration manager with support for:
-    - Multiple profiles (dev, test, prod)
-    - Configuration merging and composition
-    - Environment variable substitution
-    - Configuration file hierarchy
+    Менеджер конфигурации с поддержкой:
+    - нескольких профилей (dev, test, prod)
+    - объединения и композиции конфигураций
+    - подстановки переменных окружения
+    - иерархии конфигурационных файлов
     """
 
     # Default configuration file paths
@@ -27,12 +27,11 @@ class ConfigManager:
     }
 
     def __init__(self, profile: Optional[ConfigProfile] = None):
-        """
-        Initialize ConfigManager.
+        """Инициализация ConfigManager.
 
         Args:
-            profile: Configuration profile (dev/test/prod).
-                    If None, read from CONFIG_PROFILE env variable or use DEV.
+            profile: Профиль конфигурации (dev/test/prod). Если None,
+                     профиль читается из переменной окружения `CONFIG_PROFILE`.
         """
         if profile is None:
             profile_str = os.getenv("CONFIG_PROFILE", "dev").lower()
@@ -46,7 +45,11 @@ class ConfigManager:
 
     @staticmethod
     def _load_yaml(path: str) -> dict:
-        """Load YAML file with environment variable substitution."""
+        """Загружает YAML-файл с подстановкой переменных окружения.
+
+        Если файл не найден, возвращает пустой словарь. Выполняется простая
+        подстановка `${VAR}` на значения из окружения перед парсингом YAML.
+        """
         if not Path(path).exists():
             return {}
 
@@ -61,16 +64,15 @@ class ConfigManager:
 
     @staticmethod
     def _merge_dicts(base: dict, override: dict, deep: bool = True) -> dict:
-        """
-        Merge override dict into base dict.
+        """Делает слияние двух словарей, где `override` имеет приоритет.
 
         Args:
-            base: Base dictionary
-            override: Override dictionary (takes precedence)
-            deep: Whether to perform deep merge for nested dicts
+            base: Базовый словарь.
+            override: Словарь с переопределениями (приоритетнее).
+            deep: Если True, выполняется глубокое слияние для вложенных словарей.
 
         Returns:
-            Merged dictionary
+            Новый словарь, полученный после слияния.
         """
         result = base.copy()
 
@@ -88,14 +90,14 @@ class ConfigManager:
         return result
 
     def load_config(self) -> AppConfig:
-        """
-        Load configuration with the following hierarchy (highest to lowest priority):
-        1. Environment variables (CONFIG_PROFILE)
-        2. Profile-specific config (params.{profile}.yaml)
-        3. Base config (params.yaml)
+        """Загружает и валидированно формирует объект конфигурации.
 
-        Returns:
-            Validated AppConfig object
+        Последовательность приоритетов (от высокого к низкому):
+        1. Переменные окружения (текущий профиль через `CONFIG_PROFILE`)
+        2. Профильный файл (например `params.dev.yaml`)
+        3. Базовый файл `params.yaml`.
+
+        Возвращает валидированный объект `AppConfig`.
         """
         # Load base configuration
         base_params = self._load_yaml(self.BASE_CONFIG)
@@ -123,26 +125,20 @@ class ConfigManager:
         return config
 
     def get_config(self) -> AppConfig:
-        """
-        Get loaded configuration. Loads if not already loaded.
+        """Возвращает загруженную конфигурацию, загрузив при необходимости.
 
-        Returns:
-            AppConfig object
+        Если конфигурация ещё не была загружена, выполняется `load_config()`.
+        Возвращает объект `AppConfig`.
         """
         if self._config is None:
             self.load_config()
         return self._config
 
     def compose_configs(self, *configs: AppConfig) -> AppConfig:
-        """
-        Compose multiple configurations into one.
-        Later configurations override earlier ones.
+        """Компонует несколько `AppConfig` в один.
 
-        Args:
-            *configs: Variable number of AppConfig objects
-
-        Returns:
-            Merged AppConfig with current profile
+        Более поздние конфигурации переопределяют поля более ранних. Результат
+        будет иметь профиль, соответствующий текущему менеджеру.
         """
         if not configs:
             return self.get_config()
@@ -156,15 +152,13 @@ class ConfigManager:
         return result
 
     def override_model_params(self, model_name: str, **params) -> AppConfig:
-        """
-        Override specific model parameters.
+        """Предопределяет параметры конкретной модели в конфигурации.
 
         Args:
-            model_name: Name of the model
-            **params: Model parameters to override
+            model_name: Имя модели для изменения параметров.
+            **params: Параметры модели, которые будут добавлены/заменены.
 
-        Returns:
-            Updated AppConfig
+        Возвращает обновлённый объект `AppConfig`.
         """
         config = self.get_config()
         models_data = config.models.model_dump(exclude_none=True)
@@ -189,14 +183,12 @@ _config_manager: Optional[ConfigManager] = None
 
 
 def initialize_config(profile: Optional[ConfigProfile] = None) -> AppConfig:
-    """
-    Initialize global configuration manager.
+    """Инициализирует глобальный менеджер конфигурации и загрузить конфиг.
 
     Args:
-        profile: Configuration profile
+        profile: Необязательный профиль для инициализации менеджера.
 
-    Returns:
-        Loaded AppConfig
+    Возвращает загруженный `AppConfig`.
     """
     global _config_manager
     _config_manager = ConfigManager(profile)
@@ -204,7 +196,7 @@ def initialize_config(profile: Optional[ConfigProfile] = None) -> AppConfig:
 
 
 def get_config_manager() -> ConfigManager:
-    """Get global configuration manager. Initializes if needed."""
+    """Возвращает глобальный экземпляр `ConfigManager`. Инициализирует при необходимости."""
     global _config_manager
     if _config_manager is None:
         _config_manager = ConfigManager()
@@ -213,5 +205,5 @@ def get_config_manager() -> ConfigManager:
 
 
 def get_config() -> AppConfig:
-    """Get global configuration."""
+    """Получает глобальную конфигурацию приложения."""
     return get_config_manager().get_config()

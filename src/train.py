@@ -48,6 +48,22 @@ pipeline_logger.info(f"Разделение: train={X_train.shape[0]}, val={X_va
 
 @log_experiment()
 def train_model(name, model, X_train, y_train, X_val, y_val, writer=None):
+    """Обучает модель и сохраняет результаты эксперимента.
+
+    Тренирует переданную модель на `X_train/y_train`, предсказывает на валидации
+    и вычисляет F1-score. Сохраняет модель в `MODEL_DIR`.
+
+    Args:
+        name: Имя модели (ключ в конфигурации).
+        model: Экземпляр модели для обучения.
+        X_train, y_train: Данные для обучения.
+        X_val, y_val: Валидационный набор для оценки.
+        writer: Необязательный `SummaryWriter` для логирования метрик.
+
+    Returns:
+        F1-score на валидационном наборе.
+    """
+
     model.fit(X_train, y_train)
     preds = model.predict(X_val)
     f1 = f1_score(y_val, preds, average="weighted")  # заменили на F1-score

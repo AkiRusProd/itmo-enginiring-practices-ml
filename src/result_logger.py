@@ -42,6 +42,7 @@ class PipelineLogger:
         self.log_file = log_file
 
     def info(self, message: str) -> None:
+        """Записывает информационное сообщение в лог."""
         self.logger.info(message)
 
     def error(self, message: str) -> None:
@@ -50,9 +51,11 @@ class PipelineLogger:
         tg_notifier.send_message(f"🚨 <b>CRITICAL ERROR ({self.name})</b>\n\n{message}")
 
     def warning(self, message: str) -> None:
+        """Записывает предупреждение в лог."""
         self.logger.warning(message)
 
     def debug(self, message: str) -> None:
+        """Записывает отладочное сообщение в лог."""
         self.logger.debug(message)
 
 

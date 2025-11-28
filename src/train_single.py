@@ -1,3 +1,9 @@
+"""Обучение одной модели; используется в пайплайне и как CLI-скрипт.
+
+Модуль предоставляет `train_single_model` для запуска из PipelineController
+и блок `__main__` для локального выполнения через CLI.
+"""
+
 import argparse
 import json
 from datetime import datetime

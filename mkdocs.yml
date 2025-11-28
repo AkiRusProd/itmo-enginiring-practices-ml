@@ -38,7 +38,7 @@ plugins:
   - mkdocstrings:
       handlers:
         python:
-          paths: [src]
+          paths: [., src] 
           options:
             show_root_heading: true
             show_source: true
