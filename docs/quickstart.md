@@ -1,188 +1,144 @@
-# Quick Start Guide
+# Краткое руководство по запуску (Quick Start)
 
-## Prerequisites
+## Предварительные требования
 
-- Python 3.9 or higher
-- Git
-- Docker (optional, for running services like ClearML Server)
-- pip or poetry
+- **Python**: 3.10 или выше
+- **DVC**: Для управления данными и пайплайнами
+- **Docker**: (Опционально) Для запуска локального сервера ClearML
+- **Git**: Для контроля версий
 
-## Installation
+## Установка
 
-### 1. Clone the repository
+### 1. Клонирование репозитория
 
 ```bash
 git clone https://github.com/AkiRusProd/itmo-enginiring-practices-ml.git
 cd itmo-enginiring-practices-ml
 ```
 
-### 2. Install dependencies
+### 2. Установка зависимостей
 
-**Option A: Using pip**
+Вы можете использовать `poetry` (рекомендуется) или `pip`.
 
+**Вариант А: Использование poetry**
+```bash
+poetry install
+```
+
+**Вариант Б: Использование pip**
 ```bash
 pip install -r requirements.txt
 ```
 
-**Option B: Using poetry**
+### 3. Настройка DVC (Данные и Хранилище)
 
-```bash
-poetry install
-poetry shell
-```
+Проект использует DVC для версионирования данных и оркестрации пайплайна.
 
-### 3. Download and prepare data
-
-The project uses DVC for data management. Initialize DVC and pull the dataset:
-
+**Инициализация данных:**
+Если у вас настроен доступ к удаленному хранилищу, просто подтяните данные:
 ```bash
 dvc pull
 ```
 
-If you want to download the raw Titanic dataset:
+**Настройка локального хранилища (с нуля):**
+Если вы настраиваете проект локально без внешнего S3 (как в ДЗ №3), создайте локальное хранилище:
 
 ```bash
-python -c "from sklearn.datasets import load_iris; import pandas as pd; pd.read_csv('data/raw/titanic.csv', nrows=1)"
+# Создаем папку вне проекта для имитации удаленного хранилища
+mkdir -p ../dvc_storage
+
+# Добавляем его как remote
+dvc remote add -d localstore ../dvc_storage
+
+# Опционально: настройка типа кэша для Windows/Linux совместимости
+dvc config cache.type copy
 ```
 
-## Running the Pipeline
+## Запуск пайплайна (DVC)
 
-### Full pipeline execution
+Основной пайплайн описан в файле `dvc.yaml`. Он управляет препроцессингом, обучением множества моделей, выбором лучшей и генерацией отчетов.
 
-Run the complete ML pipeline (preprocessing, training, evaluation, and report generation):
-
+### 1. Запуск полного цикла
+Для воспроизведения всех результатов выполните:
 ```bash
 dvc repro
 ```
+Эта команда последовательно выполнит:
+1.  **Preprocess**: Обработка сырых данных (`src/preprocess.py`).
+2.  **Train**: Параллельное обучение моделей-кандидатов (`src/train_single.py`).
+3.  **Select**: Выбор лучшей модели по F1-score (`src/select_best.py`).
+4.  **Evaluate**: Оценка чемпиона на отложенной выборке (`src/eval.py`).
+5.  **Report**: Генерация отчета (`src/generate_report.py`).
 
-This will:
-1. **Preprocess** the data
-2. **Train** multiple models (Decision Tree, Random Forest, Logistic Regression, SVC, Gradient Boosting, AdaBoost, Bagging)
-3. **Evaluate** models on test set
-4. **Select** the best model
-5. **Generate** an experiment report with visualizations
-
-### Train a single model
-
-To train only one model:
+### 2. Запуск экспериментов с параметрами
+Вы можете динамически менять параметры без редактирования файлов (Hydra-like переопределение):
 
 ```bash
-python src/train_single.py --model RandomForest --profile dev
+dvc exp run -S train.test_size=0.3 -S train.seed=123
 ```
 
-Available models: `DecisionTree`, `RandomForest`, `LogisticRegression`, `SVC`, `GradientBoosting`, `AdaBoost`, `Bagging`
+### 3. Сравнение экспериментов
+Просмотр истории запусков и метрик в терминале:
+```bash
+dvc exp show
+```
+Чтобы увидеть разницу в метриках между текущим запуском и последним коммитом:
+```bash
+dvc metrics diff
+```
 
-Available profiles: `dev`, `test`, `prod`
+## Запуск с ClearML (MLOps)
 
-### Evaluate models
+Для продвинутого трекинга и реестра моделей проект интегрирован с ClearML.
+
+### 1. Запуск ClearML Server
+Используйте `docker-compose` для поднятия локального бэкенда:
+```bash
+docker compose -f docker-compose.clearml.yml up -d
+```
+*   Веб-интерфейс: [http://localhost:8080](http://localhost:8080)
+*   API Сервер: [http://localhost:8008](http://localhost:8008)
+
+### 2. Настройка кредов
+1.  Перейдите в **Settings > Workspace** в веб-интерфейсе.
+2.  Создайте новые учетные данные (Create new credentials).
+3.  Скопируйте их в файл `.env` (см. пример в `.env.example`).
+
+### 3. Запуск пайплайна через контроллер
+Чтобы запустить пайплайн как задачу ClearML (с автоматическим трекингом артефактов и логов):
 
 ```bash
-python src/eval.py
+python src/pipeline_controller.py
 ```
+Скрипт построит DAG задач и выполнит их (локально или через агентов), загружая все метрики и модели на сервер.
 
-### Generate experiment report
+## Мониторинг и Визуализация
 
+### TensorBoard
+Метрики обучения (loss, F1 по эпохам) пишутся в директорию `tb_logs/`.
 ```bash
-python src/generate_report.py
+tensorboard --logdir tb_logs
 ```
+Откройте [http://localhost:6006](http://localhost:6006) для просмотра графиков.
 
-This creates `docs/experiments.md` with visualizations and metrics.
+### ClearML UI
+Если ClearML активен, вы можете видеть:
+*   **Scalars:** Графики метрик в реальном времени.
+*   **Plots:** Матрицы ошибок и важность признаков.
+*   **Artifacts:** Скачивание обученных моделей `.pkl`.
+*   **Comparison:** Сравнение параметров нескольких экспериментов бок-о-бок.
 
-## Configuration
+## Профили конфигурации
 
-The project uses a configuration system with environment-specific profiles:
+Система поддерживает разные окружения. Поведение меняется через переменную окружения `CONFIG_PROFILE` в [dvc.yaml](dvc.yaml):
 
-- **`params.yaml`** - Base configuration
-- **`config/params.dev.yaml`** - Development overrides
-- **`config/params.test.yaml`** - Test overrides
-- **`config/params.prod.yaml`** - Production overrides
+*   **`dev`** (По умолчанию): Быстрое обучение, меньше деревьев, меньше итераций.
+*   **`test`**: Сбалансированные настройки.
+*   **`prod`**: Полноценное обучение.
 
-To change the profile, set the environment variable:
 
-```bash
-export CONFIG_PROFILE=prod
-```
+## Решение проблем
 
-See [Configuration System Documentation](../CONFIGURATION_SYSTEM.md) for more details.
-
-## Project Structure
-
-```
-.
-├── data/                 # Raw and processed datasets
-├── src/                  # Source code
-│   ├── preprocess.py     # Data preprocessing
-│   ├── train.py          # Multi-model training
-│   ├── train_single.py   # Single model training
-│   ├── eval.py           # Model evaluation
-│   ├── select_best.py    # Best model selection
-│   ├── generate_report.py # Report generation
-│   └── config_manager.py # Configuration management
-├── docs/                 # Documentation
-├── metrics/              # Training metrics
-├── models/               # Trained model artifacts
-├── reports/              # Generated reports
-└── dvc.yaml              # DVC pipeline configuration
-```
-
-## Viewing Results
-
-After running the pipeline, you can view:
-
-1. **Experiment Report**: `docs/experiments.md`
-2. **Metrics**: 
-   - All models: `metrics/train_models/`
-   - Best model: `metrics/best_model_advanced_metrics.json`
-3. **Visualizations**: `docs/assets/images/`
-4. **Logs**: `logs/` directory
-
-## ClearML Integration (Optional)
-
-To enable ClearML for experiment tracking:
-
-1. Start ClearML Server:
-   ```bash
-   docker compose -f docker-compose.clearml.yml up -d
-   ```
-
-2. Configure credentials:
-   ```bash
-   clearml-init
-   ```
-
-3. Run training with ClearML logging:
-   ```bash
-   python src/train.py
-   ```
-
-See [Deployment Guide](deployment.md) for more details.
-
-## Troubleshooting
-
-### Missing data
-```bash
-dvc pull
-```
-
-### Permission errors
-```bash
-chmod -R 755 /path/to/project
-```
-
-### DVC errors
-```bash
-dvc cache dir  # Check cache location
-dvc dag        # Visualize pipeline
-```
-
-## Next Steps
-
-- Read the [Deployment Guide](deployment.md) for production setup
-- Check [API Reference](../reference/config.md) for API documentation
-- View [Experiment Results](../experiments.md) to see latest metrics
-
-## Support
-
-For issues or questions, please refer to:
-- [GitHub Issues](https://github.com/AkiRusProd/itmo-enginiring-practices-ml/issues)
-- [Configuration System Documentation](../CONFIGURATION_SYSTEM.md)
+*   **Отсутствуют данные:** Если `dvc repro` падает на этапе данных, проверьте `data/raw/dataset.csv`. Возможно, нужно сделать `dvc pull` или положить файл датасета вручную.
+*   **Ошибка подключения ClearML:** Убедитесь, что `docker ps` показывает запущенные контейнеры. Проверьте доступность [http://localhost:8008/debug.ping](http://localhost:8008/debug.ping).
+*   **Права доступа:** Если используете локальное хранилище (`localstore`), убедитесь, что у вас есть права на запись в папку `../dvc_storage`.
