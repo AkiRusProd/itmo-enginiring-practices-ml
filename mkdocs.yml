@@ -77,4 +77,5 @@ nav:
       - Config Manager: reference/config.md
       - Pipeline Controller: reference/pipeline.md
       - Training: reference/train.md
+      - Selection: reference/select.md
       - Evaluation: reference/eval.md
