@@ -8,13 +8,14 @@ import pickle  # nosec
 from contextlib import contextmanager
 from functools import wraps
 from pathlib import Path
+from typing import Any, Callable, Generator
 
 from tensorboardX import SummaryWriter
 
 from base_config import TB_LOG_DIR
 
 
-def save_model(model, path):
+def save_model(model: Any, path: str) -> None:
     """Сохраняет объект модели в файл.
 
     Сериализует объект модели с помощью `pickle` и сохраняет по указанному пути.
@@ -29,7 +30,7 @@ def save_model(model, path):
         pickle.dump(model, f)
 
 
-def load_model(path):
+def load_model(path: str) -> Any:
     """Загружает модель из pickle-файла.
 
     Args:
@@ -43,7 +44,9 @@ def load_model(path):
 
 
 @contextmanager
-def experiment(exp_name, log_dir=TB_LOG_DIR):
+def experiment(
+    exp_name: str, log_dir: str = TB_LOG_DIR
+) -> Generator[SummaryWriter, None, None]:
     """Контекстный менеджер для работы с TensorBoard.
 
     Создает `SummaryWriter` при входе в контекст и автоматически закрывает его
@@ -63,7 +66,7 @@ def experiment(exp_name, log_dir=TB_LOG_DIR):
         writer.close()
 
 
-def log_experiment():
+def log_experiment() -> Callable[[Callable[..., Any]], Callable[..., Any]]:
     """Декоратор для автоматического логирования экспериментов.
 
     Оборачивает функцию, требующую логирования. Извлекает из именованных
@@ -74,11 +77,11 @@ def log_experiment():
         Callable: Декорированная функция.
     """
 
-    def decorator(func):
+    def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
         """Декоратор-обёртка, создающий `wrapper` для функции."""
 
         @wraps(func)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
             """Wrapper: извлекает параметры логирования и вызывает функцию.
 
             Ожидает в `kwargs` наличие ключа `exp_name`.

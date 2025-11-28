@@ -19,7 +19,7 @@ from select_best import select_best_model
 from train_single import train_single_model
 
 
-def run_pipeline():
+def run_pipeline() -> None:
     """
     Настраивает и запускает ML-пайплайн в ClearML.
 

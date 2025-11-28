@@ -2,7 +2,7 @@
 
 import os
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 
 import yaml
 
@@ -170,7 +170,7 @@ class ConfigManager:
         result.profile = self.profile
         return result
 
-    def override_model_params(self, model_name: str, **params) -> AppConfig:
+    def override_model_params(self, model_name: str, **params: Any) -> AppConfig:
         """Переопределяет параметры конкретной модели "на лету".
 
         Args:

@@ -23,7 +23,7 @@ class TrainConfig(BaseModel):
 
     @field_validator("test_size")
     @classmethod
-    def validate_test_size(cls, v):
+    def validate_test_size(cls, v: float) -> float:
         """Проверяет, что размер тестовой выборки находится в диапазоне (0, 1)."""
         if not 0 < v < 1:
             raise ValueError("test_size must be between 0 and 1")

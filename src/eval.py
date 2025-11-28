@@ -37,7 +37,7 @@ from result_logger import PipelineLogger, log_results
 from schemas import EvalMetrics
 
 
-def evaluate_model():
+def evaluate_model() -> None:
     """Выполняет полный цикл оценки модели.
 
     1. Загружает модель `best_model.pkl`.

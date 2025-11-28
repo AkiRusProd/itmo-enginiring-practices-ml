@@ -8,6 +8,7 @@ import glob
 import json
 from datetime import datetime
 from pathlib import Path
+from typing import Optional
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -23,7 +24,7 @@ REPORT_PATH = DOCS_DIR / "experiments.md"
 IMAGES_DIR.mkdir(parents=True, exist_ok=True)
 
 
-def load_metrics():
+def load_metrics() -> pd.DataFrame:
     """Считывает метрики всех моделей из JSON-файлов.
 
     Сканирует директорию `metrics/train_models/`, загружает данные из каждого
@@ -50,7 +51,7 @@ def load_metrics():
     return pd.DataFrame(data)
 
 
-def load_best_metrics():
+def load_best_metrics() -> Optional[dict]:
     """Загружает детальные метрики лучшей модели.
 
     Считывает файл `metrics/best_model_advanced_metrics.json`, созданный
@@ -67,7 +68,7 @@ def load_best_metrics():
         return json.load(f)
 
 
-def plot_model_comparison(df):
+def plot_model_comparison(df: pd.DataFrame) -> Optional[str]:
     """Строит и сохраняет график сравнения моделей по F1 Score.
 
     Args:
@@ -119,7 +120,7 @@ def plot_model_comparison(df):
     return "assets/images/model_comparison.png"
 
 
-def plot_confusion_matrix(matrix):
+def plot_confusion_matrix(matrix: list[list[int]] | None) -> Optional[str]:
     """Визуализирует и сохраняет матрицу ошибок.
 
     Args:
@@ -153,7 +154,12 @@ def plot_confusion_matrix(matrix):
     return "assets/images/confusion_matrix.png"
 
 
-def generate_markdown(df, best_metrics, comparison_img, cm_img):
+def generate_markdown(
+    df: pd.DataFrame,
+    best_metrics: Optional[dict],
+    comparison_img: Optional[str],
+    cm_img: Optional[str],
+) -> str:
     """Формирует текст отчета в формате Markdown.
 
     Собирает воедино таблицы с метриками, ссылки на изображения и текстовые описания.
@@ -204,7 +210,7 @@ def generate_markdown(df, best_metrics, comparison_img, cm_img):
     return md
 
 
-def main():
+def main() -> None:
     """Основная функция запуска генерации отчета."""
     print("Generating report with visualizations...")
     df = load_metrics()

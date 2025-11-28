@@ -6,6 +6,7 @@
 """
 import random
 from pathlib import Path
+from typing import Union
 
 import numpy as np
 import pandas as pd
@@ -19,7 +20,10 @@ np.random.seed(SEED)
 random.seed(SEED)
 
 
-def preprocess(input_path=RAW_DATA_PATH, output_path=DATA_PATH):
+def preprocess(
+    input_path: Union[str, Path] = RAW_DATA_PATH,
+    output_path: Union[str, Path] = DATA_PATH,
+) -> None:
     """Выполняет предобработку исходных данных и сохраняет результат.
 
     Считывает CSV-файл, выполняет следующие преобразования:

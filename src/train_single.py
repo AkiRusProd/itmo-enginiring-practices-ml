@@ -13,6 +13,7 @@ import argparse
 import json
 from datetime import datetime
 from pathlib import Path
+from typing import Any, Optional
 
 import numpy as np
 import pandas as pd
@@ -45,7 +46,7 @@ np.random.seed(SEED)
 
 
 @log_experiment()
-def train_single_model(model_name, writer=None):
+def train_single_model(model_name: str, writer: Optional[Any] = None) -> float:
     """Обучает указанную модель и сохраняет результаты.
 
     Выполняет полный цикл обучения для одной модели: загрузка данных,

@@ -19,7 +19,7 @@ from result_logger import PipelineLogger, log_results
 from schemas import BestModelMetrics, TrainMetrics
 
 
-def select_best_model():
+def select_best_model() -> str:
     """Выполняет процедуру выбора лучшей модели.
 
     1. Сканирует файлы метрик в `metrics/train_models/`.

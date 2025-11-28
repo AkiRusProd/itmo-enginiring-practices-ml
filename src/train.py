@@ -9,6 +9,7 @@ import json
 import random
 from datetime import datetime
 from pathlib import Path
+from typing import Any, Optional
 
 import numpy as np
 import pandas as pd
@@ -54,7 +55,15 @@ pipeline_logger.info(f"Разделение: train={X_train.shape[0]}, val={X_va
 
 
 @log_experiment()
-def train_model(name, model, X_train, y_train, X_val, y_val, writer=None):
+def train_model(
+    name: str,
+    model: Any,
+    X_train: pd.DataFrame,
+    y_train: pd.Series,
+    X_val: pd.DataFrame,
+    y_val: pd.Series,
+    writer: Optional[Any] = None,
+) -> float:
     """Обучает модель и сохраняет результаты эксперимента.
 
     Тренирует переданную модель на `X_train/y_train`, предсказывает на валидации

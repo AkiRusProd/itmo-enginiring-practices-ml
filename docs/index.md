@@ -25,7 +25,7 @@
 *   **Руководства:** Написаны `Quick Start`, `Deployment Guide` и описание системы конфигурации.
 
 ### 2. ✅ Публикация в GitHub Pages (3 балла)
-*   **CI/CD:** Настроен GitHub Actions workflow [`gh-pages.yml`](./.github/workflows/gh-pages.yml).
+*   **CI/CD:** Настроен GitHub Actions workflow `.github/workflows/gh-pages.yml`.
 *   **Автоматизация:** При пуше в ветку `main` происходит:
     1.  Установка зависимостей.
     2.  Генерация актуального отчета (`src/generate_report.py`).
@@ -34,7 +34,7 @@
 *   **Результат:** Документация доступна онлайн (см. Environment URL в репозитории).
 
 ### 3. ✅ Отчеты об экспериментах (2 балла)
-*   **Генерация:** Реализован скрипт [`src/generate_report.py`](./src/generate_report.py), который парсит JSON-метрики.
+*   **Генерация:** Реализован скрипт `src/generate_report.py`, который парсит JSON-метрики.
 *   **Визуализация:**
     *   📊 **Leaderboard:** Сравнительная таблица всех обученных моделей (сортировка по F1).
     *   📈 **Plots:** График сравнения метрик F1 Score для всех кандидатов.
