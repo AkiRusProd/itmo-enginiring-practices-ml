@@ -74,8 +74,10 @@ nav:
   - Experiments:
       - Report: experiments.md
   - API Reference:
-      - Config Manager: reference/config.md
-      - Pipeline Controller: reference/pipeline.md
+      - Configuration: reference/config.md
+      - Data Processing: reference/data.md
       - Training: reference/train.md
       - Selection: reference/select.md
-      - Evaluation: reference/eval.md
+      - Evaluation & Report: reference/eval.md
+      - Pipeline: reference/pipeline.md
+      - Utilities & Logs: reference/utilities.md
