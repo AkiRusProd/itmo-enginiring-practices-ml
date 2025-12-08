@@ -145,7 +145,14 @@ Directory structure:
 - Или в контейнере
     ```
     docker build -t itmo-enginiring-practices-ml .
-    docker run --rm itmo-enginiring-practices-ml
+    docker run --rm \
+    -v $(pwd)/data:/app/data \
+    -v $(pwd)/models:/app/models \
+    -v $(pwd)/.dvc/cache:/app/.dvc/cache \
+    -v $(pwd)/.git:/app/.git \
+    -v $(pwd)/dvc.lock:/app/dvc.lock \
+    -v $(pwd)/dvc.yaml:/app/dvc.yaml \
+    itmo-enginiring-practices-ml
     ```
-    ![alt text](images/dvc_docker.png)
+    ![alt text](images/dvc_docker2.png)
     Ничего не изменилось

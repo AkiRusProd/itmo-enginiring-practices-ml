@@ -1,0 +1,38 @@
+# .dockerignore
+
+
+# Игнорируем кэш DVC и временные файлы
+.dvc/cache
+.dvc/tmp
+
+# Игнорируем сами данные (пусть DVC их подтягивает)
+data/raw/*.csv
+data/processed/*
+
+# Игнорируем готовые модели (мы хотим их воспроизвести внутри)
+models/*.pkl
+
+# Игнорируем локальное виртуальное окружение и кэш питона
+venv
+.env/
+.venv/
+venv/
+
+# Игнорируем остальные временные и служебные файлы
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+
+.cache
+
+*.cover
+*.log
+.git
+.mypy_cache
+.pytest_cache
+.ruff_cache
