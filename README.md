@@ -74,40 +74,40 @@ Directory structure:
 1. Установку и запуск выполним через docker-compose:
     https://github.com/clearml/clearml-server/blob/master/docker/docker-compose.yml
 
-2.1 Выдаем права на директорию для работы elastic-search.
+2. Выдаем права на директорию для работы elastic-search.
     ```
     sudo chown -R 1000:1000 /opt/clearml/data/elastic_7
     sudo chmod -R 775 /opt/clearml/data/elastic_7
     ```
-2.2 Увеличиваем лимит виртуальной памяти, без которого Elasticsearch не работает 
+3. Увеличиваем лимит виртуальной памяти, без которого Elasticsearch не работает 
     ```
     sudo sysctl -w vm.max_map_count=262144
     ```
 
-3. Запускаем контейнеры.
+4. Запускаем контейнеры.
     ```
     docker compose -f docker-compose.clearml.yml up --build -d
     ```
-4. Переходим по `http://localhost:8080`. После этого сервис должен запуститься:
+5. Переходим по `http://localhost:8080`. После этого сервис должен запуститься:
     ![alt text](images/clearml_start.png)
 
-5. Далее "Settings" -> "Workspace" -> "Create new credentials" (или просто http://localhost:8080/settings/workspace-configuration).
+6. Далее "Settings" -> "Workspace" -> "Create new credentials" (или просто http://localhost:8080/settings/workspace-configuration).
 
-6. Не забываем поставить clearml в poetry: `poetry add clearml`
+7. Не забываем поставить clearml в poetry: `poetry add clearml`
 
-7. Далее создаем файл `.env` в корне проекта (Пример: [.env.example](.env.example)).
+8. Далее создаем файл `.env` в корне проекта (Пример: [.env.example](.env.example)).
 
 
-8. (Необязательный шаг, если не хотите использовать .env) Далее в cli с проектом пишем clearml-init. В директории юзера должен появиться `clearml.conf`
+9. (Необязательный шаг, если не хотите использовать .env) Далее в cli с проектом пишем clearml-init. В директории юзера должен появиться `clearml.conf`
 /home/rustam/clearml.conf
 
-9. Перезапускаем контейнеры:
+10. Перезапускаем контейнеры:
     ```
     docker compose -f docker-compose.clearml.yml down
     docker compose -f docker-compose.clearml.yml up -d
     ```
 
-10. Дополнительно можно проверить, что все работает по адресу http://localhost:8008/debug.ping. Должны получить `result_msg	"OK"`.
+11. Дополнительно можно проверить, что все работает по адресу http://localhost:8008/debug.ping. Должны получить `result_msg	"OK"`.
 
 
 
