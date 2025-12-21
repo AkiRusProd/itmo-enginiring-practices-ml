@@ -74,10 +74,14 @@ Directory structure:
 1. Установку и запуск выполним через docker-compose:
     https://github.com/clearml/clearml-server/blob/master/docker/docker-compose.yml
 
-2. Выдаем права на директорию для работы elastic-search.
+2.1 Выдаем права на директорию для работы elastic-search.
     ```
     sudo chown -R 1000:1000 /opt/clearml/data/elastic_7
     sudo chmod -R 775 /opt/clearml/data/elastic_7
+    ```
+2.2 Увеличиваем лимит виртуальной памяти, без которого Elasticsearch не работает 
+    ```
+    sudo sysctl -w vm.max_map_count=262144
     ```
 
 3. Запускаем контейнеры.
@@ -220,5 +224,6 @@ pipe.set_default_execution_queue("default")
 Выполнено
 ###	5.4 Сохранить отчет в Git репозитории
 Выполнено
+
 
 
